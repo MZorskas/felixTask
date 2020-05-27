@@ -50,16 +50,6 @@ main {
   width: 100%;
 }
 
-.moviesContainer {
-  max-width: 1120px;
-  margin: auto;
-  height: 100%;
-  background-color: var(--black);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
 .credit-cards {
 }
 
@@ -85,4 +75,10 @@ main {
 
 .btnContainer {
   margin: 50px;
+}
+
+@media only screen and (max-width: 1120px) {
+  .MoviesContainer {
+    justify-content: center;
+  }
 }

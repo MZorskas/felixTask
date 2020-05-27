@@ -1,0 +1,19 @@
+.MoviesContainer {
+  max-width: 1120px;
+  margin: auto;
+  height: 100%;
+  background-color: var(--black);
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.loader {
+  background-color: var(--black);
+  padding: 100px 0px;
+}
+
+@media only screen and (max-width: 1120) {
+  .MoviesContainer {
+    justify-content: center;
+  }
+}

@@ -1,9 +1,9 @@
 .movieBlock {
   width: 270px;
-  height: 341px;
+  height: 350px;
   background-color: var(--grey);
   display: flex;
-  flex-direction: column;
+  flex-flow: column nowrap;
   margin: 50px 50px 0px;
   color: var(--white);
 }
@@ -39,4 +39,8 @@
 
 .movieBlock .movie-info {
   margin: 0px 20px;
+}
+
+.movie-info {
+  height: 139px;
 }

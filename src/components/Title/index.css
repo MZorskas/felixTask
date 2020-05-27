@@ -8,7 +8,7 @@
   padding: 0;
 }
 
-.title--banner {
+/* .title--banner {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
@@ -20,8 +20,4 @@
   color: var(--white);
 
   text-shadow: -1px 8px 7px rgba(0, 0, 0, 0.39);
-
-  /* top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
-}
+} */
