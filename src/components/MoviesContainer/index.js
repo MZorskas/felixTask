@@ -12,13 +12,28 @@ class MoviesContainer extends React.Component {
   //   }
   state = {
     movies: [],
+    favorites: [],
     loading: true,
     error: null,
   };
 
   componentDidMount() {
     this.getFreeMovies();
+
+    // setFollowList(event.target.parentElement.parentElement.id);
   }
+
+  addFavorite = (id) => {
+    // let movie = event.target.parentElement.parentElement.id;
+    console.log(id);
+    console.log(this.state.favorites);
+    !this.state.favorites.includes(id)
+      ? this.setState({ favorites: [...this.state.favorites, id] })
+      : this.setState({
+          favorites: this.state.favorites.filter((favorite) => favorite !== id),
+        });
+    console.log(this.state.favorites);
+  };
 
   async getFreeMovies() {
     const url = 'https://academy-video-api.herokuapp.com/content/free-items';
@@ -31,7 +46,9 @@ class MoviesContainer extends React.Component {
     this.setState({ movies: data, loading: false });
     console.log(data);
     // console.log(this.state.data);
+    console.log(this.state);
   }
+
   //   children, title, placeHolder, href
   render() {
     return (
@@ -46,7 +63,10 @@ class MoviesContainer extends React.Component {
               <MovieBlock
                 title={movie.title}
                 placeHolder={movie.image}
-                key={movie.id}
+                onClick={() => this.addFavorite(movie.id)}
+                isFavorite={
+                  this.state.favorites.includes(movie.id) ? true : false
+                }
               >
                 <p>{movie.description}</p>
               </MovieBlock>

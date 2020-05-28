@@ -1,6 +1,7 @@
 .movieBlock {
+  position: relative;
   width: 270px;
-  height: 350px;
+  height: 370px;
   background-color: var(--grey);
   display: flex;
   flex-flow: column nowrap;
@@ -22,7 +23,8 @@
 
 .movieBlock p {
   width: 227px;
-  margin-top: 10px;
+  margin: 10px 0px;
+
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -39,8 +41,13 @@
 
 .movieBlock .movie-info {
   margin: 0px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+  padding: 10px 0px;
 }
 
-.movie-info {
-  height: 139px;
+.movie-info .btn {
+  margin-top: auto;
 }

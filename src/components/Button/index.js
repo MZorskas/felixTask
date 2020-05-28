@@ -9,7 +9,15 @@ const STYLES = [
 
 const SIZES = ['btn--medium', 'btn--small', 'btn--large'];
 
-function Button({ children, type, onClick, buttonStyle, buttonSize }) {
+function Button({
+  children,
+  type,
+  onClick,
+  buttonStyle,
+  buttonSize,
+  id,
+  isFavorite,
+}) {
   const checkButtonStyle = STYLES.includes(buttonStyle)
     ? buttonStyle
     : STYLES[0];
@@ -21,6 +29,7 @@ function Button({ children, type, onClick, buttonStyle, buttonSize }) {
       className={`btn ${checkButtonStyle} ${checkButtonSize}`}
       onClick={onClick}
       type={type}
+      id={id}
     >
       {children}
     </button>
