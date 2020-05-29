@@ -1,5 +1,5 @@
 import React from 'react';
-import './index.css';
+import './index.scss';
 import Button from '../Button';
 
 function MovieBlock({
@@ -37,7 +37,7 @@ function MovieBlock({
           onClick={onClick}
           buttonStyle={isFavorite && 'btn--primary--outline'}
         >
-          Favorite
+          {!isFavorite ? 'Favorite' : 'Remove'}
         </Button>
       </div>
     </div>

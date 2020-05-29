@@ -6,6 +6,7 @@
 } */
 
 .btn {
+  color: var(--white);
   font-family: Roboto;
   font-weight: bold;
   box-sizing: border-box;
@@ -15,6 +16,7 @@
   font-size: 16px;
   line-height: 19px;
   z-index: 2;
+  text-decoration: none;
 }
 
 *:focus {
@@ -35,16 +37,13 @@
 }
 
 .btn--medium {
-  width: 120px;
-  height: 40px;
+  padding: 10px 35px;
 }
 
 .btn--small {
-  width: 120px;
-  height: 30px;
+  padding: 10px 20px;
 }
 
 .btn--large {
-  width: 156px;
-  height: 40px;
+  padding: 10px 45px;
 }

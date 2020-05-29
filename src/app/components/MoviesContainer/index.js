@@ -1,5 +1,5 @@
 import React from 'react';
-import './index.css';
+import './index.scss';
 import MovieBlock from '../MovieBlock';
 import loading from '../../images/loading.svg';
 
@@ -19,12 +19,9 @@ class MoviesContainer extends React.Component {
 
   componentDidMount() {
     this.getFreeMovies();
-
-    // setFollowList(event.target.parentElement.parentElement.id);
   }
 
   addFavorite = (id) => {
-    // let movie = event.target.parentElement.parentElement.id;
     console.log(id);
     console.log(this.state.favorites);
     !this.state.favorites.includes(id)

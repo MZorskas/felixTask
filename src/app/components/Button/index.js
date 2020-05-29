@@ -1,5 +1,6 @@
 import React from 'react';
-import './index.css';
+import './index.scss';
+import { Link } from 'react-router-dom';
 
 const STYLES = [
   'btn--primary-solid',
@@ -15,9 +16,11 @@ function Button({
   onClick,
   buttonStyle,
   buttonSize,
-  id,
+  form,
+  to,
   isFavorite,
 }) {
+  const Tag = to ? Link : 'button';
   const checkButtonStyle = STYLES.includes(buttonStyle)
     ? buttonStyle
     : STYLES[0];
@@ -25,14 +28,15 @@ function Button({
   const checkButtonSize = SIZES.includes(buttonSize) ? buttonSize : SIZES[0];
 
   return (
-    <button
+    <Tag
       className={`btn ${checkButtonStyle} ${checkButtonSize}`}
       onClick={onClick}
       type={type}
-      id={id}
+      to={to}
+      form={form}
     >
       {children}
-    </button>
+    </Tag>
   );
 }
 
