@@ -3,12 +3,13 @@ import './index.scss';
 
 import Button from '../../components/Button';
 
-let Username = null;
-let Password = null;
-
 class Login extends React.Component {
   state = {
+    username: '',
+    password: '',
     showPassword: false,
+    error: false,
+    token: '',
   };
 
   togglePasswordVisibility = () => {
@@ -16,20 +17,50 @@ class Login extends React.Component {
     this.setState({ showPassword: !showPassword });
   };
 
-  submit = () => {
-    alert(`Username: ${Username} and Password: ${Password}`);
+  login = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch(
+      'https://academy-video-api.herokuapp.com/auth/login',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: this.state.username,
+          password: this.state.password,
+        }),
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw response;
+        }
+        return response;
+      })
+      .then(async (response) => {
+        // console.log(response);
+        const token = await response.json();
+        console.log(token);
+        return localStorage.setItem('token', token.token);
+      })
+      .catch(async (e) => {
+        console.log(await e.json());
+      });
   };
+
   render = () => {
     const { showPassword } = this.state;
-    console.log({ showPassword });
+    // console.log({ showPassword });
     return (
       <div className="login">
         <div class="loginBox">
-          <form id="login-form" onSubmit={this.submit}>
+          <form id="login-form" onSubmit={this.login}>
             <h3>Username</h3>
             <input
               onChange={(event) => {
-                Username = event.target.value;
+                this.setState({ username: event.target.value });
               }}
               type="text"
               placeholder="Username"
@@ -38,7 +69,7 @@ class Login extends React.Component {
             <h3>Password</h3>
             <input
               onChange={(event) => {
-                Password = event.target.value;
+                this.setState({ password: event.target.value });
               }}
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
