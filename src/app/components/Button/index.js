@@ -18,7 +18,6 @@ function Button({
   buttonSize,
   form,
   to,
-  isFavorite,
 }) {
   const Tag = to ? Link : 'button';
   const checkButtonStyle = STYLES.includes(buttonStyle)

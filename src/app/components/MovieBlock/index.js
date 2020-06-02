@@ -33,7 +33,7 @@ function MovieBlock({
         {children}
 
         <Button
-          buttonSize="btn--small"
+          buttonSize="btn--medium"
           onClick={onClick}
           buttonStyle={isFavorite && 'btn--primary--outline'}
         >

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import Header from '../Header';
 import Footer from '../Footer';
@@ -6,11 +7,15 @@ import Footer from '../Footer';
 function PageLayout({ children }) {
   return (
     <React.Fragment>
-      <div className="App">
-        <Header />
-        <main>{children}</main>
+      <Header />
+      <main>{children}</main>
+      <Switch>
         <Footer />
-      </div>
+
+        <Route path="*">
+          <footer>Footer</footer>
+        </Route>
+      </Switch>
     </React.Fragment>
   );
 }

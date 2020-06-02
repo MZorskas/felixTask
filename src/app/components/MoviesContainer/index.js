@@ -4,17 +4,14 @@ import MovieBlock from '../MovieBlock';
 import loading from '../../images/loading.svg';
 
 class MoviesContainer extends React.Component {
-  //   async componentDidMount() {
-  //     const url = 'https://academy-video-api.herokuapp.com/content/free-items';
-  //     const response = await fetch(url);
-  //     const data = await response.json();
-  //     console.log(data);
-  //   }
   state = {
     movies: [],
     favorites: [],
     loading: true,
     error: null,
+    url: localStorage.getItem('token')
+      ? 'https://academy-video-api.herokuapp.com/content/items'
+      : 'https://academy-video-api.herokuapp.com/content/free-items',
   };
 
   componentDidMount() {
@@ -33,8 +30,15 @@ class MoviesContainer extends React.Component {
   };
 
   async getFreeMovies() {
-    const url = 'https://academy-video-api.herokuapp.com/content/free-items';
-    const response = await fetch(url);
+    console.log(this.state.url);
+    console.log(this.state.token);
+    const response = await fetch(this.state.url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: localStorage.getItem('token'),
+      },
+    });
     // if (!response.ok) {
     //   throw 'fetch failed';
     // }

@@ -26,6 +26,7 @@
 /* Button Styles and Sizes */
 
 .btn--primary-solid {
+  border: 1px solid var(--red);
   background-color: var(--red);
   color: var(--white);
 }

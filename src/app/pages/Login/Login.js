@@ -2,15 +2,17 @@ import React from 'react';
 import './index.scss';
 
 import Button from '../../components/Button';
+import { withRouter } from 'react-router-dom';
 
 class Login extends React.Component {
-  state = {
-    username: '',
-    password: '',
-    showPassword: false,
-    error: false,
-    token: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      password: '',
+      showPassword: false,
+    };
+  }
 
   togglePasswordVisibility = () => {
     const { showPassword } = this.state;
@@ -19,8 +21,8 @@ class Login extends React.Component {
 
   login = async (e) => {
     e.preventDefault();
-
-    const response = await fetch(
+    console.log(this.props);
+    const response = fetch(
       'https://academy-video-api.herokuapp.com/auth/login',
       {
         method: 'POST',
@@ -37,16 +39,15 @@ class Login extends React.Component {
         if (!response.ok) {
           throw response;
         }
-        return response;
+        return response.json();
       })
-      .then(async (response) => {
-        // console.log(response);
-        const token = await response.json();
-        console.log(token);
-        return localStorage.setItem('token', token.token);
+      .then((response) => {
+        console.log(response);
+        localStorage.setItem('token', response.token);
+        this.props.history.replace('/content');
       })
-      .catch(async (e) => {
-        console.log(await e.json());
+      .catch((e) => {
+        console.log(e.json());
       });
   };
 
@@ -91,4 +92,4 @@ class Login extends React.Component {
   };
 }
 
-export default Login;
+export default withRouter(Login);

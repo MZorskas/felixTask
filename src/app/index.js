@@ -5,6 +5,8 @@ import './index.scss';
 import PageLayout from './components/PageLayout';
 import Login from './pages/Login/Login';
 import Home from './pages/Home/Home';
+import Content from './pages/Content/Content';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
@@ -17,6 +19,9 @@ function App() {
           <Route exact path="/login">
             <Login />
           </Route>
+          <PrivateRoute exact path="/content">
+            <Content />
+          </PrivateRoute>
         </Switch>
       </PageLayout>
     </Router>
