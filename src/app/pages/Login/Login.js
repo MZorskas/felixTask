@@ -22,19 +22,16 @@ class Login extends React.Component {
   login = async (e) => {
     e.preventDefault();
     console.log(this.props);
-    const response = fetch(
-      'https://academy-video-api.herokuapp.com/auth/login',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: this.state.username,
-          password: this.state.password,
-        }),
-      }
-    )
+    fetch('https://academy-video-api.herokuapp.com/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password,
+      }),
+    })
       .then((response) => {
         if (!response.ok) {
           throw response;
@@ -47,7 +44,7 @@ class Login extends React.Component {
         this.props.history.replace('/content');
       })
       .catch((e) => {
-        console.log(e.json());
+        console.log(e);
       });
   };
 

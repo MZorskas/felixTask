@@ -1,21 +1,22 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import Header from '../Header';
 import Footer from '../Footer';
 
-function PageLayout({ children }) {
+function PageLayout({ props, children }) {
+  console.log('PageLayout', props);
   return (
     <React.Fragment>
-      <Header />
-      <main>{children}</main>
-      <Switch>
-        <Footer />
-
-        <Route path="*">
-          <footer>Footer</footer>
-        </Route>
-      </Switch>
+      <div class="App">
+        <Header {...props} />
+        <main>{children}</main>
+        <Switch>
+          <Route path="*">
+            <Footer />
+          </Route>
+        </Switch>
+      </div>
     </React.Fragment>
   );
 }

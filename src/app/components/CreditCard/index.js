@@ -5,7 +5,7 @@ function CreditCard({ placeHolder, alt, href }) {
   return (
     <React.Fragment>
       <li className="CreditCard">
-        <a className href={href} target="_blank">
+        <a className href={href} target="_blank" rel="noopener noreferrer">
           <img src={placeHolder} alt={alt}></img>
         </a>
       </li>

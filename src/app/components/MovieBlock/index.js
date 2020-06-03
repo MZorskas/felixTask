@@ -7,7 +7,7 @@ function MovieBlock({
   title,
   placeHolder,
   href,
-  id,
+
   onClick,
   isFavorite,
 }) {
@@ -24,7 +24,7 @@ function MovieBlock({
   // };
 
   return (
-    <div className="movieBlock" id={id}>
+    <div className="movieBlock">
       <div className="img-container">
         <img className="" src={placeHolder} alt="Movie" />
       </div>
