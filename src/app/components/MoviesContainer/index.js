@@ -4,33 +4,6 @@ import MovieBlock from '../MovieBlock';
 import loading from '../../images/loading.svg';
 
 class MoviesContainer extends React.Component {
-  // componentDidMount() {
-  //   this.getMovies();
-  // }
-
-  // async getMovies() {
-  //   console.log(this.state.url);
-  //   console.log(this.state.token);
-  //   const response = await fetch(this.state.url, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       authorization: localStorage.getItem('token'),
-  //     },
-  //   });
-  //   if (!response.ok) {
-  //     throw this.setState({ error: response });
-  //   }
-  //   const data = await response.json();
-
-  //   this.setState({ movies: data, loading: false });
-  //   console.log(data);
-  //   // console.log(this.state.data);
-  //   console.log(this.state);
-  // }
-
-  //   children, title, placeHolder, href
-
   addFavorite = (id) => {
     this.props.addFavorite(id);
   };

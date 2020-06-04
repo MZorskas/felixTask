@@ -7,22 +7,9 @@ function MovieBlock({
   title,
   placeHolder,
   href,
-
   onClick,
   isFavorite,
 }) {
-  // const [favorite, setFavorite] = React.useState([]);
-  // const addFavorite = (event) => {
-  //   console.log(favorite);
-  //   // console.log(movies);
-  //   let id = event.target.parentElement.parentElement.id;
-  //   console.log(id);
-  //   setFavorite([...favorite, favorite.push(id)]);
-
-  //   console.log(favorite);
-  //   // setFollowList(event.target.parentElement.parentElement.id);
-  // };
-
   return (
     <div className="movieBlock">
       <div className="img-container">

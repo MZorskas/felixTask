@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  withRouter,
-} from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 
 import './index.scss';
 import PageLayout from './components/PageLayout';
@@ -27,34 +22,54 @@ class App extends React.Component {
     console.log(this.state.favorites);
   };
 
+  logout = () => {
+    fetch('https://academy-video-api.herokuapp.com/auth/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: localStorage.getItem('token'),
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw response;
+        }
+        localStorage.clear();
+        console.log('token removed');
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   render() {
     return (
-      <Router>
-        <PageLayout>
-          <Switch>
-            <Route exact path="/">
-              <Home
-                movies={this.state.movies}
-                favorites={this.state.favorites}
-                addFavorite={this.addFavorite}
-                loading={this.state.loading}
-              />
-            </Route>
-            <Route exact path="/login">
-              <Login />
-            </Route>
-            <PrivateRoute exact path="/content">
-              <Content
-                movies={this.state.movies}
-                favorites={this.state.favorites}
-                loading={this.state.loading}
-                addFavorite={this.addFavorite}
-              />
-            </PrivateRoute>
-          </Switch>
-        </PageLayout>
-      </Router>
+      <PageLayout logout={this.logout}>
+        <Switch>
+          <Route exact path="/">
+            <Home
+              movies={this.state.movies}
+              favorites={this.state.favorites}
+              addFavorite={this.addFavorite}
+              loading={this.state.loading}
+            />
+          </Route>
+          <Route exact path="/login">
+            <Login />
+          </Route>
+          <PrivateRoute exact path="/content">
+            <Content
+              movies={this.state.movies}
+              favorites={this.state.favorites}
+              loading={this.state.loading}
+              addFavorite={this.addFavorite}
+            />
+          </PrivateRoute>
+        </Switch>
+      </PageLayout>
     );
   }
 }
-export default App;
+export default withRouter(App);

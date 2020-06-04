@@ -13,11 +13,6 @@ import MoviesContainer from '../../components/MoviesContainer';
 
 import HeroImage from '../../images/Hero.jpg';
 
-// import Twitter from '../../images/twitter.svg';
-// import Github from '../../images/github.svg';
-
-// let loading = true;
-
 class Home extends React.Component {
   state = {
     movies: [],
@@ -45,16 +40,7 @@ class Home extends React.Component {
       throw this.setState({ error: response });
     }
     const data = await response.json();
-    // console.log('Fetchas', this.props.movies);
-    // console.log('Fetchas', data);
-    // this.props.movies = data;
-
     this.setState({ movies: data, loading: false });
-    // !!this.props.loading
-    //   ? (this.props.loading = false)
-    //   : (this.props.loading = true);
-
-    // this.setState({ movies: data, loading: false });
   }
 
   render() {
