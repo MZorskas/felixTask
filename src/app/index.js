@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import './index.scss';
@@ -7,69 +7,47 @@ import Login from './pages/Login/Login';
 import Home from './pages/Home/Home';
 import Content from './pages/Content/Content';
 import PrivateRoute from './components/PrivateRoute';
+import Movie from './pages/Movie/Movie';
 
-class App extends React.Component {
-  state = {
-    favorites: [],
+function App() {
+  const [favorites, setFavorites] = useState([]);
+
+  // addFavorite = (id) => {
+  //   !this.state.favorites.includes(id)
+  //     ? this.setState({ favorites: [...this.state.favorites, id] })
+  //     : this.setState({
+  //         favorites: this.state.favorites.filter((favorite) => favorite !== id),
+  //       });
+  //   console.log(this.state.favorites);
+  // };
+
+  const toggleFavorite = (id) => {
+    !favorites.includes(id)
+      ? setFavorites([...favorites, id])
+      : setFavorites(favorites.filter((favorite) => favorite !== id));
+    console.log(favorites);
   };
 
-  addFavorite = (id) => {
-    !this.state.favorites.includes(id)
-      ? this.setState({ favorites: [...this.state.favorites, id] })
-      : this.setState({
-          favorites: this.state.favorites.filter((favorite) => favorite !== id),
-        });
-    console.log(this.state.favorites);
-  };
-
-  logout = () => {
-    fetch('https://academy-video-api.herokuapp.com/auth/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        token: localStorage.getItem('token'),
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw response;
-        }
-        localStorage.clear();
-        console.log('token removed');
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
-  render() {
-    return (
-      <PageLayout logout={this.logout}>
-        <Switch>
-          <Route exact path="/">
-            <Home
-              movies={this.state.movies}
-              favorites={this.state.favorites}
-              addFavorite={this.addFavorite}
-              loading={this.state.loading}
-            />
-          </Route>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <PrivateRoute exact path="/content">
-            <Content
-              movies={this.state.movies}
-              favorites={this.state.favorites}
-              loading={this.state.loading}
-              addFavorite={this.addFavorite}
-            />
-          </PrivateRoute>
-        </Switch>
-      </PageLayout>
-    );
-  }
+  return (
+    <PageLayout>
+      <Switch>
+        <Route exact path="/">
+          <Home favorites={favorites} toggleFavorite={toggleFavorite} />
+        </Route>
+        <Route exact path="/login">
+          <Login />
+        </Route>
+        <PrivateRoute exact path="/content">
+          <Content favorites={favorites} toggleFavorite={toggleFavorite} />
+        </PrivateRoute>
+        <PrivateRoute path="/content/:movieId">
+          <Movie favorites={favorites} toggleFavorite={toggleFavorite} />
+        </PrivateRoute>
+        <Route exact path="*">
+          <h1>Page not found</h1>
+        </Route>
+      </Switch>
+    </PageLayout>
+  );
 }
 export default withRouter(App);

@@ -1,20 +1,16 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import './index.scss';
 
 import MoviesContainer from '../../components/MoviesContainer';
+import MovieContainer from '../../components/MovieContainer';
 
-class Content extends React.Component {
-  state = {
-    movies: [],
-    loading: true,
-    error: '',
-  };
+function Content(props) {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  componentDidMount() {
-    this.getMovies();
-  }
-
-  async getMovies() {
+  const getMovies = useCallback(async () => {
     const response = await fetch(
       'https://academy-video-api.herokuapp.com/content/items',
       {
@@ -26,37 +22,32 @@ class Content extends React.Component {
       }
     );
     if (!response.ok) {
-      throw this.setState({ error: response });
+      throw setError({ error: response });
     }
     const data = await response.json();
+    setMovies(data);
+    setLoading(false);
+  }, [setError, setMovies, setLoading]);
 
-    this.setState({ movies: data, loading: false });
-  }
+  useEffect(() => {
+    getMovies();
+  }, [getMovies]);
 
-  addFavorite = (id) => {
-    !this.state.favorites.includes(id)
-      ? this.setState({ favorites: [...this.state.favorites, id] })
-      : this.setState({
-          favorites: this.state.favorites.filter((favorite) => favorite !== id),
-        });
-    console.log(this.state.favorites);
-  };
-
-  render = () => {
-    const { favorites, addFavorite } = this.props;
-    console.log('propsai', this.props);
-    // console.log({ showPassword });
-    return (
-      <React.Fragment>
-        <MoviesContainer
-          movies={this.state.movies}
-          favorites={favorites}
-          loading={this.state.loading}
-          addFavorite={addFavorite}
-        />
-      </React.Fragment>
-    );
-  };
+  return (
+    <React.Fragment>
+      <MoviesContainer
+        movies={movies}
+        favorites={props.favorites}
+        loading={loading}
+        toggleFavorite={props.toggleFavorite}
+      />
+      <Switch>
+        <Route path={`${Content}/:movieId`}>
+          <MovieContainer />
+        </Route>
+      </Switch>
+    </React.Fragment>
+  );
 }
 
 export default Content;

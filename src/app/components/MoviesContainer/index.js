@@ -1,40 +1,45 @@
 import React from 'react';
 import './index.scss';
 import MovieBlock from '../MovieBlock';
-import loading from '../../images/loading.svg';
+import loadingImg from '../../images/loading.svg';
+import { Route } from 'react-router-dom';
+import Movie from '../../pages/Movie/Movie';
 
-class MoviesContainer extends React.Component {
-  addFavorite = (id) => {
-    this.props.addFavorite(id);
-  };
+function MoviesContainer(props) {
+  // const addFavorite = (id) => {
+  //   props.addFavorite(id);
+  // };
 
-  render() {
-    const { movies, favorites, loading } = this.props;
-    console.log('moviesContainer', this.props);
-    console.log(movies);
-    return (
-      <div className="MoviesContainer">
-        {loading ? (
-          <div className="loader">
-            <img src={loading} alt="Loading..." />
-          </div>
-        ) : (
-          movies.map((movie) => {
-            return (
-              <MovieBlock
-                title={movie.title}
-                placeHolder={movie.image}
-                onClick={() => this.addFavorite(movie.id)}
-                isFavorite={favorites.includes(movie.id) && true}
-              >
-                <p>{movie.description}</p>
-              </MovieBlock>
-            );
-          })
-        )}
-      </div>
-    );
-  }
+  const { movies, favorites, loading, toggleFavorite } = props;
+  // console.log('moviesContainer', props);
+  // console.log(favorites);
+  return (
+    <div className="MoviesContainer">
+      {loading ? (
+        <div className="loader">
+          <img src={loadingImg} alt="Loading..." />
+        </div>
+      ) : (
+        movies.map((movie) => {
+          return (
+            <MovieBlock
+              title={movie.title}
+              placeHolder={movie.image}
+              onClick={() => toggleFavorite(movie.id)}
+              movieId={movie.id}
+              isFavorite={favorites.includes(movie.id) && true}
+            >
+              <p>{movie.description}</p>
+            </MovieBlock>
+          );
+        })
+      )}
+
+      <Route path={`/content/:movieId`}>
+        <Movie />
+      </Route>
+    </div>
+  );
 }
 
 export default MoviesContainer;

@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import './index.scss';
 import Button from '../Button';
-import { Link, withRouter, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
-class Header extends React.Component {
-  logout = () => {
-    console.log('headerFetch', this.props);
+function Header() {
+  const history = useHistory();
+  const location = useLocation();
+
+  const logout = useCallback(() => {
     fetch('https://academy-video-api.herokuapp.com/auth/logout', {
       method: 'POST',
       headers: {
@@ -21,36 +23,40 @@ class Header extends React.Component {
         }
         localStorage.clear();
         console.log('token removed');
-        this.props.history.replace('/');
+        history.replace('/');
       })
       .catch((e) => {
         console.log(e);
       });
-  };
+  }, [history]);
+  console.log('header', location);
+  console.log('header', history);
+  return (
+    <header className="App-header">
+      <nav className="Navbar">
+        <Link to="/" className="Logo" href="http://localhost:3000">
+          FELIX
+        </Link>
+        <div className="NavigationLinks">
+          {location.pathname.includes('/content/') && (
+            <Button to="/content" buttonStyle="btn--primary--solid">
+              Content
+            </Button>
+          )}
 
-  render = () => {
-    console.log('Header', this.props);
-    const { history } = this.props;
-    console.log('Header', localStorage.getItem('token'));
-    return (
-      <header className="App-header">
-        <nav className="Navbar">
-          <Link to="/" className="Logo" href="http://localhost:3000">
-            FELIX
-          </Link>
           {localStorage.token === undefined ? (
             <Button to="/login" buttonStyle="btn--primary--solid">
               Sign In
             </Button>
           ) : (
-            <Button buttonStyle="btn--primary--solid" onClick={this.logout}>
+            <Button buttonStyle="btn--primary--solid" onClick={logout}>
               Logout
             </Button>
           )}
-        </nav>
-      </header>
-    );
-  };
+        </div>
+      </nav>
+    </header>
+  );
 }
 
-export default withRouter(Header);
+export default Header;

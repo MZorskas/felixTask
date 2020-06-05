@@ -1,31 +1,22 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import './index.scss';
-import { withRouter } from 'react-router-dom';
-
+import { useLocation } from 'react-router-dom';
 //Components
-
 import Button from '../../components/Button';
 import Separator from '../../components/Separator';
 import Banner from '../../components/Banner';
 import MoviesContainer from '../../components/MoviesContainer';
 
 // Images
-
 import HeroImage from '../../images/Hero.jpg';
 
-class Home extends React.Component {
-  state = {
-    movies: [],
-    loading: true,
-    error: '',
-  };
+function Home(props) {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const location = useLocation();
 
-  componentDidMount() {
-    this.getMovies();
-  }
-
-  async getMovies() {
-    console.log('fetchas', this.props);
+  const getMovies = useCallback(async () => {
     const response = await fetch(
       'https://academy-video-api.herokuapp.com/content/items',
       {
@@ -37,33 +28,34 @@ class Home extends React.Component {
       }
     );
     if (!response.ok) {
-      throw this.setState({ error: response });
+      throw setError({ error: response });
     }
     const data = await response.json();
-    this.setState({ movies: data, loading: false });
-  }
+    setMovies(data);
+    setLoading(false);
+  }, [setError, setMovies, setLoading]);
 
-  render() {
-    const { favorites, addFavorite, loading } = this.props;
-    console.log('homePage', this.props);
+  useEffect(() => {
+    getMovies();
+  }, [getMovies]);
 
-    return (
-      <React.Fragment>
-        <Banner placeHolder={HeroImage} title="Wanna more Content?"></Banner>
-        <Separator />
-        <MoviesContainer
-          movies={this.state.movies}
-          favorites={favorites}
-          loading={this.state.loading}
-          addFavorite={addFavorite}
-        />
-        <div className="btnContainer">
-          <Button buttonStyle="btn--primary--solid" buttonSize="btn--large">
-            Get More Content
-          </Button>
-        </div>
-      </React.Fragment>
-    );
-  }
+  return (
+    <React.Fragment>
+      <Banner placeHolder={HeroImage} title="Wanna more Content?"></Banner>
+      <Separator />
+      <MoviesContainer
+        movies={movies}
+        favorites={props.favorites}
+        loading={loading}
+        toggleFavorite={props.toggleFavorite}
+      />
+      <div className="btnContainer">
+        <Button buttonStyle="btn--primary--solid" buttonSize="btn--large">
+          Get More Content
+        </Button>
+      </div>
+    </React.Fragment>
+  );
 }
-export default withRouter(Home);
+
+export default Home;
