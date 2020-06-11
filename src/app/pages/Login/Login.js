@@ -3,8 +3,9 @@ import './index.scss';
 
 import Button from '../../components/Button';
 import { useHistory, useLocation } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-function Login(props) {
+function Login({ loginUser }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -14,10 +15,11 @@ function Login(props) {
   const location = useLocation();
 
   const togglePasswordVisibility = () => {
-    showPassword(!showPassword);
+    setShowPassword(!showPassword);
   };
+
   // console.log('History', history);
-  console.log('Location', location);
+  // console.log('Location', location);
 
   const login = useCallback(
     (e) => {
@@ -34,13 +36,14 @@ function Login(props) {
       })
         .then((response) => {
           if (!response.ok) {
-            throw setError(response);
+            throw setError('Wrong credentials!');
           }
           return response.json();
         })
         .then((response) => {
           console.log('loginFetch', response);
           localStorage.setItem('token', response.token);
+          loginUser(response.token);
           history.replace(
             location.state ? location.state.referrer.pathname : '/content'
           );
@@ -49,7 +52,7 @@ function Login(props) {
           console.log(e);
         });
     },
-    [username, password, history]
+    [username, password, history, loginUser, location.state]
   );
 
   return (
@@ -74,6 +77,7 @@ function Login(props) {
             placeholder="Password"
             name="password"
           />
+          {!!error && <h3 style={{ color: 'red' }}>{error}</h3>}
           <i
             className={`fa ${
               showPassword ? 'fa-eye-slash' : 'fa-eye'
@@ -89,4 +93,18 @@ function Login(props) {
   );
 }
 
-export default Login;
+function mapStateToProps({ authentication: { token } }) {
+  console.log('Login, mapStateToProps', token);
+  return {
+    token,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  // console.log('MovieBlock, mapDispatchToProps', dispatch);
+  return {
+    loginUser: (token) => dispatch({ type: 'USER_LOGIN', token }),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

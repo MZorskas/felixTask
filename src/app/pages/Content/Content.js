@@ -1,12 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
 import './index.scss';
-
+import { connect } from 'react-redux';
 import MoviesContainer from '../../components/MoviesContainer';
-import MovieContainer from '../../components/MovieContainer';
 
-function Content(props) {
-  const [movies, setMovies] = useState([]);
+function Content({ content, loadMovies }) {
+  // const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -22,12 +20,13 @@ function Content(props) {
       }
     );
     if (!response.ok) {
-      throw setError({ error: response });
+      throw setError('Error fetching movies');
     }
     const data = await response.json();
-    setMovies(data);
+    // setMovies(data);
+    loadMovies(data);
     setLoading(false);
-  }, [setError, setMovies, setLoading]);
+  }, [setError, setLoading, loadMovies]);
 
   useEffect(() => {
     getMovies();
@@ -35,19 +34,21 @@ function Content(props) {
 
   return (
     <React.Fragment>
-      <MoviesContainer
-        movies={movies}
-        favorites={props.favorites}
-        loading={loading}
-        toggleFavorite={props.toggleFavorite}
-      />
-      <Switch>
-        <Route path={`${Content}/:movieId`}>
-          <MovieContainer />
-        </Route>
-      </Switch>
+      {!error && <MoviesContainer loading={loading} />}
     </React.Fragment>
   );
 }
 
-export default Content;
+function mapStateToProps({ content }) {
+  // console.log('Home, mapStateToProps', content);
+  return {
+    content,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  // console.log('MovieBlock, mapDispatchToProps', dispatch);
+  loadMovies: (data) => dispatch({ type: 'GET_MOVIES', data }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Content);

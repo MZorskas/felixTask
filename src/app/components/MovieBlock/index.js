@@ -2,25 +2,17 @@ import React from 'react';
 import './index.scss';
 import Button from '../Button';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 function MovieBlock({
   children,
   title,
   placeHolder,
-  onClick,
-  isFavorite,
   movieId,
+  content,
+  toggleFavorite,
 }) {
-  // const [favorite, setFavorite] = React.useState([]);
-  // const addFavorite = (event) => {
-  //   console.log(favorite);
-  //   // console.log(movies);
-  //   let id = event.target.parentElement.parentElement.id;
-  //   console.log(id);
-  //   setFavorite([...favorite, favorite.push(id)]);
-
-  //   console.log(favorite);
-  //   // setFollowList(event.target.parentElement.parentElement.id);
-  // };
+  const onClick = () => toggleFavorite(movieId);
 
   return (
     <div className="movieBlock">
@@ -38,13 +30,29 @@ function MovieBlock({
         <Button
           buttonSize="btn--medium"
           onClick={onClick}
-          buttonStyle={isFavorite && 'btn--primary--outline'}
+          buttonStyle={
+            content.favorites.includes(movieId) && 'btn--primary--outline'
+          }
         >
-          {!isFavorite ? 'Favorite' : 'Remove'}
+          {!!content.favorites.includes(movieId) ? 'Remove' : 'Favorite'}
         </Button>
       </div>
     </div>
   );
 }
 
-export default MovieBlock;
+function mapStateToProps({ content }) {
+  // console.log('MovieBlock, mapStateToProps', content);
+  return {
+    content,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  // console.log('MovieBlock, mapDispatchToProps', dispatch);
+  return {
+    toggleFavorite: (id) => dispatch({ type: 'TOGGLE_FAVORITE', id }),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MovieBlock);

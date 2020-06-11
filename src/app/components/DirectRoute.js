@@ -1,14 +1,24 @@
 import React from 'react';
 import { Route, Redirect, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
+// import { useParams } from 'react-router-dom';
 
-function PrivateRoute(props) {
+function DirectRoute({ movies }, props) {
+  // const { movieId } = useParams();
   // console.log('privateRoute', token);
-  console.log('privateRoute', props);
-  const location = useLocation();
-  // const token = localStorage.getItem('token');
-  if (props.token) {
-    // console.log('Proceed');
+
+  console.log('privateRoute', movies);
+  // console.log('privateRoute', props);
+
+  const movie = movies.find((movie) => {
+    return movie.id === location.state.movieId;
+  });
+
+  console.log('privateRoute', movie);
+  const token = localStorage.getItem('token');
+
+  if (movie) {
+    console.log('Proceed');
     return <Route {...props} />;
   }
 
@@ -23,8 +33,7 @@ function mapStateToProps({ content: { movies }, authentication: { token } }) {
   console.log('Home, mapStateToProps', movies);
   return {
     movies,
-    token,
   };
 }
 
-export default connect(mapStateToProps)(PrivateRoute);
+export default connect(mapStateToProps)(DirectRoute);

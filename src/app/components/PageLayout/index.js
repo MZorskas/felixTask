@@ -1,10 +1,10 @@
 import React from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import Header from '../Header';
 import Footer from '../Footer';
 
-function PageLayout({ props, children }) {
+function PageLayout({ children }) {
   return (
     <React.Fragment>
       <div class="App">

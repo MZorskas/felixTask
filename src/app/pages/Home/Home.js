@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import './index.scss';
-import { useLocation } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 //Components
 import Button from '../../components/Button';
 import Separator from '../../components/Separator';
@@ -10,12 +11,10 @@ import MoviesContainer from '../../components/MoviesContainer';
 // Images
 import HeroImage from '../../images/Hero.jpg';
 
-function Home(props) {
-  const [movies, setMovies] = useState([]);
+function Home({ loadMovies, token }) {
+  // const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const location = useLocation();
-
+  console.log(token);
   const getMovies = useCallback(async () => {
     const response = await fetch(
       'https://academy-video-api.herokuapp.com/content/items',
@@ -23,17 +22,18 @@ function Home(props) {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          authorization: localStorage.getItem('token'),
+          authorization: token,
         },
       }
     );
-    if (!response.ok) {
-      throw setError({ error: response });
-    }
+    // if (!response.ok) {
+    //   throw setError({ error: response });
+    // }
     const data = await response.json();
-    setMovies(data);
+    // setMovies(data);
+    loadMovies(data);
     setLoading(false);
-  }, [setError, setMovies, setLoading]);
+  }, [loadMovies, setLoading, token]);
 
   useEffect(() => {
     getMovies();
@@ -43,19 +43,29 @@ function Home(props) {
     <React.Fragment>
       <Banner placeHolder={HeroImage} title="Wanna more Content?"></Banner>
       <Separator />
-      <MoviesContainer
-        movies={movies}
-        favorites={props.favorites}
-        loading={loading}
-        toggleFavorite={props.toggleFavorite}
-      />
+      <MoviesContainer loading={loading} />
       <div className="btnContainer">
-        <Button buttonStyle="btn--primary--solid" buttonSize="btn--large">
-          Get More Content
-        </Button>
+        {!token && (
+          <Button buttonStyle="btn--primary--solid" buttonSize="btn--large">
+            Get More Content
+          </Button>
+        )}
       </div>
     </React.Fragment>
   );
 }
 
-export default Home;
+function mapStateToProps({ content: { movies }, authentication: { token } }) {
+  console.log('Home, mapStateToProps', movies);
+  return {
+    movies,
+    token,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  // console.log('MovieBlock, mapDispatchToProps', dispatch);
+  loadMovies: (data) => dispatch({ type: 'GET_MOVIES', data }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

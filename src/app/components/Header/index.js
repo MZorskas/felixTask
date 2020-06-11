@@ -1,11 +1,12 @@
 import React, { useCallback } from 'react';
 import './index.scss';
 import Button from '../Button';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-function Header() {
+function Header({ logoutUser, token }) {
   const history = useHistory();
-  const location = useLocation();
+  // const location = useLocation();
 
   const logout = useCallback(() => {
     fetch('https://academy-video-api.herokuapp.com/auth/logout', {
@@ -14,23 +15,24 @@ function Header() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        token: localStorage.getItem('token'),
+        token: token,
       }),
     })
       .then((response) => {
         if (!response.ok) {
           throw response;
         }
-        localStorage.clear();
+        localStorage.removeItem('token');
+        logoutUser();
         console.log('token removed');
         history.replace('/');
       })
       .catch((e) => {
         console.log(e);
       });
-  }, [history]);
-  console.log('header', location);
-  console.log('header', history);
+  }, [history, logoutUser, token]);
+  // console.log('header', location);
+  // console.log('header', history);
   return (
     <header className="App-header">
       <nav className="Navbar">
@@ -38,7 +40,7 @@ function Header() {
           FELIX
         </Link>
         <div className="NavigationLinks">
-          {location.pathname.includes('/content/') && (
+          {token && (
             <Button to="/content" buttonStyle="btn--primary--solid">
               Content
             </Button>
@@ -59,4 +61,17 @@ function Header() {
   );
 }
 
-export default Header;
+function mapStateToProps({ authentication: { token } }) {
+  console.log('Login, mapStateToProps', token);
+  return {
+    token,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    logoutUser: () => dispatch({ type: 'USER_LOGOUT' }),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
