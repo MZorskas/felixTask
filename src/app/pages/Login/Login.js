@@ -4,6 +4,7 @@ import './index.scss';
 import Button from '../../components/Button';
 import { useHistory, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
+import authentication from '../../../authentication';
 
 function Login({ loginUser }) {
   const [username, setUsername] = useState('');
@@ -94,7 +95,7 @@ function Login({ loginUser }) {
 }
 
 function mapStateToProps({ authentication: { token } }) {
-  console.log('Login, mapStateToProps', token);
+  // console.log('Login, mapStateToProps', token);
   return {
     token,
   };
@@ -103,7 +104,8 @@ function mapStateToProps({ authentication: { token } }) {
 function mapDispatchToProps(dispatch) {
   // console.log('MovieBlock, mapDispatchToProps', dispatch);
   return {
-    loginUser: (token) => dispatch({ type: 'USER_LOGIN', token }),
+    loginUser: (token) =>
+      dispatch({ type: authentication.types.USER_LOGIN, token }),
   };
 }
 

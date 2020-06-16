@@ -1,18 +1,19 @@
+import * as types from './types';
+
 const DEFAULT_AUTHENTICATION_STATE = {
   token: localStorage.getItem('token'),
   error: null,
 };
 
 function authentication(state = DEFAULT_AUTHENTICATION_STATE, action) {
-  console.log({ state, action });
   switch (action.type) {
-    case 'USER_LOGIN': {
+    case types.USER_LOGIN: {
       return {
         ...state,
         token: action.token,
       };
     }
-    case 'USER_LOGOUT': {
+    case types.USER_LOGOUT: {
       return {
         ...state,
         token: null,
@@ -23,3 +24,13 @@ function authentication(state = DEFAULT_AUTHENTICATION_STATE, action) {
   }
 }
 export default authentication;
+
+// import { combineReducers } from 'redux';
+
+// import authentication from './authentication';
+// import content from './content';
+
+// export default combineReducers({
+//   authentication,
+//   content,
+// });

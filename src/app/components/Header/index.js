@@ -3,6 +3,7 @@ import './index.scss';
 import Button from '../Button';
 import { Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
+import authentication from '../../../authentication';
 
 function Header({ logoutUser, token }) {
   const history = useHistory();
@@ -62,7 +63,7 @@ function Header({ logoutUser, token }) {
 }
 
 function mapStateToProps({ authentication: { token } }) {
-  console.log('Login, mapStateToProps', token);
+  // console.log('Logout, mapStateToProps', token);
   return {
     token,
   };
@@ -70,7 +71,7 @@ function mapStateToProps({ authentication: { token } }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    logoutUser: () => dispatch({ type: 'USER_LOGOUT' }),
+    logoutUser: () => dispatch({ type: authentication.types.USER_LOGOUT }),
   };
 }
 

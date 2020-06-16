@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import './index.scss';
 import { connect } from 'react-redux';
+import content from '../../../content/';
 
 //Components
 import Button from '../../components/Button';
@@ -14,7 +15,8 @@ import HeroImage from '../../images/Hero.jpg';
 function Home({ loadMovies, token }) {
   // const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  console.log(token);
+  // console.log(token);
+
   const getMovies = useCallback(async () => {
     const response = await fetch(
       'https://academy-video-api.herokuapp.com/content/items',
@@ -56,7 +58,7 @@ function Home({ loadMovies, token }) {
 }
 
 function mapStateToProps({ content: { movies }, authentication: { token } }) {
-  console.log('Home, mapStateToProps', movies);
+  // console.log('Home, mapStateToProps', token);
   return {
     movies,
     token,
@@ -65,7 +67,7 @@ function mapStateToProps({ content: { movies }, authentication: { token } }) {
 
 const mapDispatchToProps = (dispatch) => ({
   // console.log('MovieBlock, mapDispatchToProps', dispatch);
-  loadMovies: (data) => dispatch({ type: 'GET_MOVIES', data }),
+  loadMovies: (data) => dispatch({ type: content.types.SAVE_MOVIES, data }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

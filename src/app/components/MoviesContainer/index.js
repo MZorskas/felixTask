@@ -6,7 +6,7 @@ import { Route } from 'react-router-dom';
 import Movie from '../../pages/Movie/Movie';
 
 function MoviesContainer({ movies }, props) {
-  console.log('xxxxxx', props);
+  // console.log('xxxxxx', props);
   return (
     <div className="MoviesContainer">
       {movies.map((movie) => {
@@ -29,7 +29,7 @@ function MoviesContainer({ movies }, props) {
 }
 
 function mapStateToProps({ content: { movies } }) {
-  console.log('MoviesContainer, mapStateToProps', movies);
+  // console.log('MoviesContainer, mapStateToProps', movies);
   return {
     movies,
   };

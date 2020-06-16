@@ -2,8 +2,9 @@ import React, { useState, useCallback, useEffect } from 'react';
 import './index.scss';
 import { connect } from 'react-redux';
 import MoviesContainer from '../../components/MoviesContainer';
+import content from '../../../content';
 
-function Content({ content, loadMovies }) {
+function Content({ content, loadMovies, token }) {
   // const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -15,7 +16,7 @@ function Content({ content, loadMovies }) {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          authorization: localStorage.getItem('token'),
+          authorization: token,
         },
       }
     );
@@ -26,7 +27,7 @@ function Content({ content, loadMovies }) {
     // setMovies(data);
     loadMovies(data);
     setLoading(false);
-  }, [setError, setLoading, loadMovies]);
+  }, [setError, setLoading, loadMovies, token]);
 
   useEffect(() => {
     getMovies();
@@ -39,16 +40,17 @@ function Content({ content, loadMovies }) {
   );
 }
 
-function mapStateToProps({ content }) {
-  // console.log('Home, mapStateToProps', content);
+function mapStateToProps({ content, authentication: { token } }) {
+  console.log('Home, mapStateToProps', { token, content });
   return {
     content,
+    token,
   };
 }
 
 const mapDispatchToProps = (dispatch) => ({
   // console.log('MovieBlock, mapDispatchToProps', dispatch);
-  loadMovies: (data) => dispatch({ type: 'GET_MOVIES', data }),
+  loadMovies: (data) => dispatch({ type: content.types.SAVE_MOVIES, data }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Content);
