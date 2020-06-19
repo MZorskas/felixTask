@@ -1,10 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import './index.scss';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import MoviesContainer from '../../components/MoviesContainer';
+import Loader from '../../components/Loader';
 import content from '../../../content';
 
-function Content({ content, loadMovies, token }) {
+function Content({ loadMovies, token }) {
   // const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -20,9 +22,8 @@ function Content({ content, loadMovies, token }) {
         },
       }
     );
-    if (!response.ok) {
-      throw setError('Error fetching movies');
-    }
+    if (!response.ok) return setError('Error while loading movies');
+
     const data = await response.json();
     // setMovies(data);
     loadMovies(data);
@@ -35,22 +36,27 @@ function Content({ content, loadMovies, token }) {
 
   return (
     <React.Fragment>
-      {!error && <MoviesContainer loading={loading} />}
+      {loading ? (
+        <Loader text={error ? error : 'Loading movies'} />
+      ) : (
+        <MoviesContainer />
+      )}
     </React.Fragment>
   );
 }
 
-function mapStateToProps({ content, authentication: { token } }) {
-  console.log('Home, mapStateToProps', { token, content });
-  return {
-    content,
-    token,
-  };
-}
+const enhance = connect(
+  (state) => {
+    return {
+      // movies: content.movies,
+      token: state.authentication.token,
+    };
+  },
+  (dispatch) => {
+    return {
+      loadMovies: bindActionCreators(content.actions.loadMovies, dispatch),
+    };
+  }
+);
 
-const mapDispatchToProps = (dispatch) => ({
-  // console.log('MovieBlock, mapDispatchToProps', dispatch);
-  loadMovies: (data) => dispatch({ type: content.types.SAVE_MOVIES, data }),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Content);
+export default enhance(Content);

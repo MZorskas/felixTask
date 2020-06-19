@@ -4,7 +4,7 @@ import Button from '../Button';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import content from '../../../content/';
-import authentication from '../../../authentication';
+import { bindActionCreators } from 'redux';
 
 function MovieBlock({
   children,
@@ -14,7 +14,7 @@ function MovieBlock({
   isFavorite,
   toggleFavorite,
 }) {
-  const onClick = () => toggleFavorite(movieId);
+  const onClick = () => toggleFavorite(movieId, isFavorite);
 
   return (
     <div className="movieBlock">
@@ -41,19 +41,20 @@ function MovieBlock({
   );
 }
 
-function mapStateToProps(state, { movieId }) {
-  // console.log('MovieBlock, mapStateToProps', state);
-  return {
-    isFavorite: content.selectors.isFavoriteById(state, movieId),
-  };
-}
+const enhance = connect(
+  (state, { movieId }) => {
+    return {
+      isFavorite: content.selectors.isFavoriteById(state, movieId),
+    };
+  },
+  (dispatch) => {
+    return {
+      toggleFavorite: bindActionCreators(
+        content.actions.toggleFavorite,
+        dispatch
+      ),
+    };
+  }
+);
 
-function mapDispatchToProps(dispatch) {
-  // console.log('MovieBlock, mapDispatchToProps', dispatch);
-  return {
-    toggleFavorite: (id) =>
-      dispatch({ type: content.types.TOGGLE_FAVORITE, id }),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MovieBlock);
+export default enhance(MovieBlock);

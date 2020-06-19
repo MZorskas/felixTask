@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import './index.scss';
-
+import { bindActionCreators } from 'redux';
 import Button from '../../components/Button';
 import { useHistory, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -11,6 +11,7 @@ function Login({ loginUser }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  // const inputRef = useRef();
 
   const history = useHistory();
   const location = useLocation();
@@ -19,6 +20,7 @@ function Login({ loginUser }) {
     setShowPassword(!showPassword);
   };
 
+  // useEffect(() => {}, []);
   // console.log('History', history);
   // console.log('Location', location);
 
@@ -94,19 +96,18 @@ function Login({ loginUser }) {
   );
 }
 
-function mapStateToProps({ authentication: { token } }) {
-  // console.log('Login, mapStateToProps', token);
-  return {
-    token,
-  };
-}
+const enhance = connect(
+  (state) => {
+    return {
+      // movies: content.movies,
+      token: state.authentication.token,
+    };
+  },
+  (dispatch) => {
+    return {
+      loginUser: bindActionCreators(authentication.actions.loginUser, dispatch),
+    };
+  }
+);
 
-function mapDispatchToProps(dispatch) {
-  // console.log('MovieBlock, mapDispatchToProps', dispatch);
-  return {
-    loginUser: (token) =>
-      dispatch({ type: authentication.types.USER_LOGIN, token }),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default enhance(Login);

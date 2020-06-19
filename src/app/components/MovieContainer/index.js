@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Modal from 'react-modal';
 import './index.scss';
 import Button from '../Button';
-import loadingImg from '../../images/loading.svg';
+import Loader from '../Loader';
 import content from '../../../content/';
 import useFetch from '../useFetch';
 
@@ -15,56 +15,15 @@ function MovieContainer({
   movieId,
   token,
   loadMovie,
-  getMovie,
 }) {
-  // const { movieId } = useParams();
   const [modal, setModal] = useState(false);
-
-  const [loading, setLoading] = useState(false);
   const [movie, setMovie] = useState(isFetched ? isFetched : false);
-  console.log('MOVIECONTAINER isFetched', isFetched);
-  console.log('MOVIECONTAINER MOVIE', movie);
   // console.log('blalblablabla', toggleFavorite);
   // console.log('blalblablabla', movieId);
   const toggleModal = () => {
     setModal(!modal);
-    console.log('MODAL', modal);
+    // console.log('MODAL', modal);
   };
-  // const { loading, error, payload: movie } = useFetch({
-  //   endpoint: `content/items/${movieId}`,
-  //   defaultPayload: {},
-  //   headers: {
-  //     authorization: token,
-  //   },
-  // });
-
-  // const fetchMovie = useCallback(() => {
-  //   fetch(`https://academy-video-api.herokuapp.com/content/items/${movieId}`, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       authorization: localStorage.getItem('token'),
-  //     },
-  //   })
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         throw response;
-  //       }
-  //       return response.json();
-  //     })
-  //     .then((response) => {
-  //       const data = response;
-  //       setMovie(data);
-  //       setLoading(false);
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-  // }, [setLoading]);
-
-  // const movie = getMovie(movieId);
-  // console.log(movie);
-  // console.log('movie', movie);
 
   const { payload, fetching } = useFetch({
     endpoint: `content/items/${movieId}`,
@@ -77,17 +36,13 @@ function MovieContainer({
   useEffect(() => {
     if (payload) {
       setMovie(payload);
-      // setLoading(fetching);
-      console.log('Payload true');
     }
-  }, [setMovie, payload]);
+  }, [setMovie, loadMovie, payload]);
 
   return (
     <div className="movieContainer">
-      {!!movie && !!loading ? (
-        <div className="loader">
-          <img src={loadingImg} alt="Loading..." />
-        </div>
+      {fetching ? (
+        <Loader text="Loading Movie"></Loader>
       ) : (
         <>
           <Modal
@@ -115,7 +70,7 @@ function MovieContainer({
               </Button>
               <Button
                 buttonSize="btn--large"
-                onClick={() => toggleFavorite(movieId)}
+                onClick={() => toggleFavorite(movieId, isFavorite)}
                 buttonStyle={isFavorite && 'btn--primary--outline'}
               >
                 {isFavorite ? 'Remove' : 'Favorite'}
@@ -128,26 +83,23 @@ function MovieContainer({
   );
 }
 
-function mapStateToProps(state, { movieId }) {
-  console.log('movieContainer999', state);
-  // console.log('MovieContainer, mapStateToProps', content);
-  // console.log('MovieContainer, mapStateToProps', props);
+const enhance = connect(
+  (state, { movieId }) => {
+    return {
+      // movies: content.movies,
+      isFetched: content.selectors.isMovieFetched(state, movieId),
+      isFavorite: content.selectors.isFavoriteById(state, movieId),
+      token: state.authentication.token,
+    };
+  },
+  (dispatch) => {
+    return {
+      toggleFavorite: bindActionCreators(
+        content.actions.toggleFavorite,
+        dispatch
+      ),
+    };
+  }
+);
 
-  return {
-    // movies: content.movies,
-    isFetched: content.selectors.isMovieFetched(state, movieId),
-    isFavorite: content.selectors.isFavoriteById(state, movieId),
-    token: state.authentication.token,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  // console.log('MovieBlock, mapDispatchToProps', dispatch);
-  return {
-    toggleFavorite: (id) =>
-      dispatch({ type: content.types.TOGGLE_FAVORITE, id }),
-    loadMovie: (data) => dispatch({ type: content.types.SAVE_MOVIE, data }),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MovieContainer);
+export default enhance(MovieContainer);

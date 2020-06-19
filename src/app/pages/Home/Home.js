@@ -2,20 +2,20 @@ import React, { useState, useCallback, useEffect } from 'react';
 import './index.scss';
 import { connect } from 'react-redux';
 import content from '../../../content/';
-
+import { bindActionCreators } from 'redux';
 //Components
 import Button from '../../components/Button';
 import Separator from '../../components/Separator';
 import Banner from '../../components/Banner';
 import MoviesContainer from '../../components/MoviesContainer';
+import Loader from '../../components/Loader';
 
 // Images
 import HeroImage from '../../images/Hero.jpg';
 
 function Home({ loadMovies, token }) {
-  // const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  // console.log(token);
+  const [error, setError] = useState(null);
 
   const getMovies = useCallback(async () => {
     const response = await fetch(
@@ -29,11 +29,14 @@ function Home({ loadMovies, token }) {
       }
     );
     // if (!response.ok) {
-    //   throw setError({ error: response });
+    //   return console.log(response);
     // }
     const data = await response.json();
-    // setMovies(data);
+
     loadMovies(data);
+    if (!data) {
+      setError('Error while loading movies');
+    }
     setLoading(false);
   }, [loadMovies, setLoading, token]);
 
@@ -45,9 +48,13 @@ function Home({ loadMovies, token }) {
     <React.Fragment>
       <Banner placeHolder={HeroImage} title="Wanna more Content?"></Banner>
       <Separator />
-      <MoviesContainer loading={loading} />
+      {loading ? (
+        <Loader text={error ? error : 'Loading movies'} />
+      ) : (
+        <MoviesContainer />
+      )}
       <div className="btnContainer">
-        {!token && (
+        {!token && !loading && (
           <Button buttonStyle="btn--primary--solid" buttonSize="btn--large">
             Get More Content
           </Button>
@@ -57,17 +64,18 @@ function Home({ loadMovies, token }) {
   );
 }
 
-function mapStateToProps({ content: { movies }, authentication: { token } }) {
-  // console.log('Home, mapStateToProps', token);
-  return {
-    movies,
-    token,
-  };
-}
+const enhance = connect(
+  (state) => {
+    return {
+      // movies: content.movies,
+      token: state.authentication.token,
+    };
+  },
+  (dispatch) => {
+    return {
+      loadMovies: bindActionCreators(content.actions.loadMovies, dispatch),
+    };
+  }
+);
 
-const mapDispatchToProps = (dispatch) => ({
-  // console.log('MovieBlock, mapDispatchToProps', dispatch);
-  loadMovies: (data) => dispatch({ type: content.types.SAVE_MOVIES, data }),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default enhance(Home);
