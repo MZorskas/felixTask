@@ -1,38 +1,21 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import './index.scss';
+
+//Redux
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+//Components
 import MoviesContainer from '../../components/MoviesContainer';
 import Loader from '../../components/Loader';
+
+//Modules
 import content from '../../../content';
 
-function Content({ loadMovies, token }) {
-  // const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  const getMovies = useCallback(async () => {
-    const response = await fetch(
-      'https://academy-video-api.herokuapp.com/content/items',
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: token,
-        },
-      }
-    );
-    if (!response.ok) return setError('Error while loading movies');
-
-    const data = await response.json();
-    // setMovies(data);
-    loadMovies(data);
-    setLoading(false);
-  }, [setError, setLoading, loadMovies, token]);
-
+function Content({ fetchMovies, loading, token, error }) {
   useEffect(() => {
-    getMovies();
-  }, [getMovies]);
+    fetchMovies();
+  }, [fetchMovies]);
 
   return (
     <React.Fragment>
@@ -48,13 +31,14 @@ function Content({ loadMovies, token }) {
 const enhance = connect(
   (state) => {
     return {
-      // movies: content.movies,
+      loading: content.selectors.isFetchingMovies(state),
+      error: content.selectors.getMoviesError(state),
       token: state.authentication.token,
     };
   },
   (dispatch) => {
     return {
-      loadMovies: bindActionCreators(content.actions.loadMovies, dispatch),
+      fetchMovies: bindActionCreators(content.actions.fetchMovies, dispatch),
     };
   }
 );

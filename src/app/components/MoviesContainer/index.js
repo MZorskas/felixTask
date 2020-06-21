@@ -2,8 +2,9 @@ import React from 'react';
 import './index.scss';
 import MovieBlock from '../MovieBlock';
 import { connect } from 'react-redux';
+import content from '../../../content';
 
-function MoviesContainer({ movies, ...props }) {
+function MoviesContainer({ movies }) {
   return (
     <div className="MoviesContainer">
       {movies.map((movie) => {
@@ -21,9 +22,9 @@ function MoviesContainer({ movies, ...props }) {
   );
 }
 
-function mapStateToProps({ content: { movies } }) {
+function mapStateToProps(state) {
   return {
-    movies,
+    movies: content.selectors.getMoviesData(state),
   };
 }
 

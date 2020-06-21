@@ -2,7 +2,11 @@ import * as types from './types';
 
 const DEFAULT_CONTENT_STATE = {
   favorites: [],
-  movies: [],
+  movies: {
+    loading: false,
+    error: null,
+    data: [],
+  },
 };
 
 const addFavorite = (state, action) => ({
@@ -28,10 +32,23 @@ function content(state = DEFAULT_CONTENT_STATE, action) {
       return addFavorite(state, action);
     }
 
-    case types.SAVE_MOVIES: {
+    case types.MOVIES_REQUEST: {
       return {
         ...state,
-        movies: action.data,
+        movies: {
+          ...state.movies,
+          loading: true,
+        },
+      };
+    }
+    case types.MOVIES_SUCCESS: {
+      return {
+        ...state,
+        movies: {
+          ...state.movies,
+          loading: false,
+          data: action.payload,
+        },
       };
       //   movies: state.movies
       //     .concat(action.data)
@@ -46,6 +63,18 @@ function content(state = DEFAULT_CONTENT_STATE, action) {
       //     ),
       // };
     }
+    case types.MOVIES_FAILURE: {
+      return {
+        ...state,
+        movies: {
+          ...state.movies,
+          loading: false,
+          data: action.payload,
+          error: action.error,
+        },
+      };
+    }
+
     case types.SAVE_MOVIE: {
       console.log('SAVE_MOVIE', state, action.data);
       return {

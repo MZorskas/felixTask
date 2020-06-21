@@ -47,7 +47,7 @@ function Header({ logoutUser, token }) {
             </Button>
           )}
 
-          {localStorage.token === undefined ? (
+          {!token ? (
             <Button to="/login" buttonStyle="btn--primary--solid">
               Sign In
             </Button>

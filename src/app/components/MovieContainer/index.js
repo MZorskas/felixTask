@@ -85,6 +85,7 @@ function MovieContainer({
 
 const enhance = connect(
   (state, { movieId }) => {
+    console.log('Movie container', state, movieId);
     return {
       // movies: content.movies,
       isFetched: content.selectors.isMovieFetched(state, movieId),
