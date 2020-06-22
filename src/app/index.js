@@ -1,10 +1,8 @@
 import React from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
-//Redux'o prodiver komponentas skirtas pasiekti store(GS) per connect()
 import { Provider } from 'react-redux';
 
-//Globalus state
 import store from './state';
 
 import './index.scss';
@@ -12,10 +10,13 @@ import PageLayout from './components/PageLayout';
 import Login from './pages/Login/Login';
 import Home from './pages/Home/Home';
 import Content from './pages/Content/Content';
+import Favorites from './pages/Favorites/Favorites';
 import PrivateRoute from './components/PrivateRoute';
 import Movie from './pages/Movie/Movie';
+import history from './components/history';
 
-function App() {
+function App(props) {
+  console.log('APP', props);
   return (
     <Provider store={store}>
       <PageLayout>
@@ -26,6 +27,9 @@ function App() {
           <Route exact path="/login">
             <Login />
           </Route>
+          <Route exact path="/favorites">
+            <Favorites />
+          </Route>
           <PrivateRoute exact path="/content">
             <Content />
           </PrivateRoute>
@@ -33,7 +37,7 @@ function App() {
             <Movie />
           </PrivateRoute>
           <Route exact path="*">
-            <h1>Page not found</h1>
+            <h1 style={{ color: 'red' }}>Page not found</h1>
           </Route>
         </Switch>
       </PageLayout>
@@ -41,4 +45,4 @@ function App() {
   );
 }
 
-export default withRouter(App);
+export default App;

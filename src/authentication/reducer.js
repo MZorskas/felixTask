@@ -6,6 +6,10 @@ const DEFAULT_AUTHENTICATION_STATE = {
     error: null,
     loading: false,
   },
+  logout: {
+    error: null,
+    loading: false,
+  },
 };
 
 function authentication(state = DEFAULT_AUTHENTICATION_STATE, action) {
@@ -21,6 +25,7 @@ function authentication(state = DEFAULT_AUTHENTICATION_STATE, action) {
     }
     case types.USER_LOGIN_SUCCESS: {
       return {
+        ...state,
         token: action.payload.token,
         login: {
           ...state.login,
@@ -38,10 +43,32 @@ function authentication(state = DEFAULT_AUTHENTICATION_STATE, action) {
         },
       };
     }
+    case types.USER_LOGOUT_REQUEST: {
+      return {
+        ...state,
+        logout: {
+          ...state.logout,
+          loading: true,
+        },
+      };
+    }
+    case types.USER_LOGOUT_FAILURE: {
+      return {
+        ...state,
+        logout: {
+          error: action.payload.response.message,
+          loading: false,
+        },
+      };
+    }
     case types.USER_LOGOUT_SUCCESS: {
       return {
         ...state,
         token: null,
+        logout: {
+          ...state.logout,
+          loading: false,
+        },
       };
     }
     default:

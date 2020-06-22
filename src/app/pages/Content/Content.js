@@ -11,16 +11,27 @@ import Loader from '../../components/Loader';
 
 //Modules
 import content from '../../../content';
+import { useHistory } from 'react-router-dom';
 
-function Content({ fetchMovies, loading, token, error }) {
+function Content({ fetchMovies, loading, error }) {
+  const history = useHistory();
+
   useEffect(() => {
     fetchMovies();
   }, [fetchMovies]);
 
+  // useEffect(() => {
+  //   if (error) {
+  //     console.log('error', error);
+  //     localStorage.removeItem('token');
+  //     history.replace('/');
+  //   }
+  // }, [error, history]);
+
   return (
     <React.Fragment>
       {loading ? (
-        <Loader text={error ? error : 'Loading movies'} />
+        <Loader text={error ? error.statusText : 'Loading movies'} />
       ) : (
         <MoviesContainer />
       )}
@@ -33,7 +44,7 @@ const enhance = connect(
     return {
       loading: content.selectors.isFetchingMovies(state),
       error: content.selectors.getMoviesError(state),
-      token: state.authentication.token,
+      // token: state.authentication.token,
     };
   },
   (dispatch) => {

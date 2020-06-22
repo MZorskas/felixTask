@@ -5,16 +5,13 @@ import Header from '../Header';
 import Footer from '../Footer';
 
 function PageLayout({ children }) {
+  console.log('PageLayout', children);
   return (
     <React.Fragment>
-      <div class="App">
+      <div className="App">
         <Header />
         <main className="main">{children}</main>
-        <Switch>
-          <Route path="*">
-            <Footer />
-          </Route>
-        </Switch>
+        <Footer />
       </div>
     </React.Fragment>
   );

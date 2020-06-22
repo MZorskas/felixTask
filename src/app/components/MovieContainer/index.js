@@ -6,44 +6,51 @@ import './index.scss';
 import Button from '../Button';
 import Loader from '../Loader';
 import content from '../../../content/';
-import useFetch from '../useFetch';
+// import useFetch from '../useFetch';
 
 function MovieContainer({
   isFavorite,
-  isFetched,
+  movie,
   toggleFavorite,
   movieId,
-  token,
-  loadMovie,
+  loading,
+  error,
+  fetchSingleMovie,
 }) {
   const [modal, setModal] = useState(false);
-  const [movie, setMovie] = useState(isFetched ? isFetched : false);
-  // console.log('blalblablabla', toggleFavorite);
-  // console.log('blalblablabla', movieId);
   const toggleModal = () => {
     setModal(!modal);
     // console.log('MODAL', modal);
   };
 
-  const { payload, fetching } = useFetch({
-    endpoint: `content/items/${movieId}`,
-    headers: {
-      authorization: token,
-    },
-    shouldFetch: !movie,
-  });
+  // const { payload, fetching } = useFetch({
+  //   endpoint: `content/items/${movieId}`,
+  //   headers: {
+  //     authorization: token,
+  //   },
+  //   shouldFetch: !movie,
+  // });
+
+  // useEffect(() => {
+  //   if (payload) {
+  //     setMovie(payload);
+  //   }
+  // }, [setMovie, loadMovie, payload]);
 
   useEffect(() => {
-    if (payload) {
-      setMovie(payload);
+    console.log('MovieContainer', movie);
+    if (!movie) {
+      fetchSingleMovie(movieId);
+      console.log('Fetching movie');
     }
-  }, [setMovie, loadMovie, payload]);
+  }, [movie, movieId, fetchSingleMovie]);
 
   return (
     <div className="movieContainer">
-      {fetching ? (
-        <Loader text="Loading Movie"></Loader>
-      ) : (
+      {loading && <Loader text="Loading Movie"></Loader>}
+      {error && <p>{error}</p>}
+
+      {!!movie && (
         <>
           <Modal
             isOpen={modal}
@@ -88,7 +95,9 @@ const enhance = connect(
     console.log('Movie container', state, movieId);
     return {
       // movies: content.movies,
-      isFetched: content.selectors.isMovieFetched(state, movieId),
+      loading: content.selectors.isFetchingMovies(state),
+      error: content.selectors.getMoviesError(state),
+      movie: content.selectors.isMovieFetched(state, movieId),
       isFavorite: content.selectors.isFavoriteById(state, movieId),
       token: state.authentication.token,
     };
@@ -97,6 +106,10 @@ const enhance = connect(
     return {
       toggleFavorite: bindActionCreators(
         content.actions.toggleFavorite,
+        dispatch
+      ),
+      fetchSingleMovie: bindActionCreators(
+        content.actions.fetchSingleMovie,
         dispatch
       ),
     };

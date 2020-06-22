@@ -37,6 +37,7 @@ function content(state = DEFAULT_CONTENT_STATE, action) {
         ...state,
         movies: {
           ...state.movies,
+          error: null,
           loading: true,
         },
       };
@@ -67,19 +68,54 @@ function content(state = DEFAULT_CONTENT_STATE, action) {
       return {
         ...state,
         movies: {
-          ...state.movies,
           loading: false,
           data: action.payload,
           error: action.error,
         },
       };
     }
-
-    case types.SAVE_MOVIE: {
-      console.log('SAVE_MOVIE', state, action.data);
+    case types.SINGLE_MOVIE_REQUEST: {
       return {
         ...state,
-        movies: state.movies.push(action.data),
+        movies: {
+          ...state.movies,
+          loading: true,
+          error: null,
+        },
+      };
+    }
+    case types.SINGLE_MOVIE_SUCCESS: {
+      return {
+        ...state,
+        movies: {
+          ...state.movies,
+          loading: false,
+          data: state.movies.data.some(({ id }) => id === action.payload.id)
+            ? state.movies.data
+            : [...state.movies.data, action.payload],
+        },
+      };
+    }
+    case types.SINGLE_MOVIE_FAILURE: {
+      return {
+        ...state,
+        movies: {
+          ...state.movies,
+          loading: false,
+          error: action.payload,
+        },
+      };
+    }
+    case types.GET_FAVORITE_MOVIES: {
+      console.log('GET_FAVORITE_MOVIES', { action, state });
+      return {
+        ...state,
+        movies: {
+          ...state.movies,
+          data: state.movies.data.filter((movie) =>
+            action.favorites.includes(movie.id)
+          ),
+        },
       };
     }
     default:

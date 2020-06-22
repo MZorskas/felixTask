@@ -4,20 +4,35 @@ import MovieBlock from '../MovieBlock';
 import { connect } from 'react-redux';
 import content from '../../../content';
 
-function MoviesContainer({ movies }) {
+function MoviesContainer({ movies, favorites }) {
+  console.log('MoviesContainer', favorites);
   return (
     <div className="MoviesContainer">
-      {movies.map((movie) => {
-        return (
-          <MovieBlock
-            title={movie.title}
-            placeHolder={movie.image}
-            movieId={movie.id}
-          >
-            <p>{movie.description}</p>
-          </MovieBlock>
-        );
-      })}
+      {favorites
+        ? favorites.map((movie) => {
+            return (
+              <MovieBlock
+                key={movie.id}
+                title={movie.title}
+                placeHolder={movie.image}
+                movieId={movie.id}
+              >
+                <p>{movie.description}</p>
+              </MovieBlock>
+            );
+          })
+        : movies.map((movie) => {
+            return (
+              <MovieBlock
+                key={movie.id}
+                title={movie.title}
+                placeHolder={movie.image}
+                movieId={movie.id}
+              >
+                <p>{movie.description}</p>
+              </MovieBlock>
+            );
+          })}
     </div>
   );
 }

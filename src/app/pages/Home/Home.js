@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import './index.scss';
 
 //Modules
@@ -19,9 +21,18 @@ import Loader from '../../components/Loader';
 import HeroImage from '../../images/Hero.jpg';
 
 function Home({ fetchMovies, token, loading, error }) {
+  const history = useHistory();
+
   useEffect(() => {
     fetchMovies();
   }, [fetchMovies]);
+
+  // useEffect(() => {
+  //   if (error) {
+  //     localStorage.removeItem('token');
+  //     history.replace('/');
+  //   }
+  // }, [error]);
 
   return (
     <React.Fragment>

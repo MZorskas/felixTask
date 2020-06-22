@@ -1,15 +1,16 @@
 import React from 'react';
-import { Route, Redirect, useLocation, useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { Route, Redirect, useLocation, useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-function PrivateRoute({ token, ...props }) {
-  // console.log('privateRoute', props);
+import authentication from '../../authentication';
+import content from '../../content';
 
+function PrivateRoute(props) {
+  const isAuthorized = useSelector(authentication.selectors.isAuthorized);
   const location = useLocation();
-  const Params = useParams();
-  // const token = localStorage.getItem('token');
-  console.log('PrivateRoute', Params);
-  if (token) {
+  const history = useHistory();
+  console.log('ssss', isAuthorized);
+  if (isAuthorized) {
     // console.log('Proceed');
     return <Route {...props} />;
   }
@@ -21,12 +22,4 @@ function PrivateRoute({ token, ...props }) {
   );
 }
 
-function mapStateToProps({ content: { movies }, authentication: { token } }) {
-  // console.log('PrivateRoute, mapStateToProps', token);
-  return {
-    movies,
-    token,
-  };
-}
-
-export default connect(mapStateToProps)(PrivateRoute);
+export default PrivateRoute;

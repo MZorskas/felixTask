@@ -10,7 +10,7 @@ const useFetch = ({
   const [fetching, setFetching] = useState(false);
   const [payload, setPayload] = useState(defaultPayload);
   const [error, setError] = useState(null);
-  console.log('INside useFetch hook', shouldFetch);
+  // console.log('INside useFetch hook', shouldFetch);
 
   const fetchPayload = useCallback(() => {
     setFetching(true);
@@ -40,7 +40,7 @@ const useFetch = ({
 
   useEffect(() => {
     if (shouldFetch === true) {
-      console.log('Fetch useEffect', shouldFetch);
+      // console.log('Fetch useEffect', shouldFetch);
       fetchPayload();
     }
   }, [fetchPayload, shouldFetch]);

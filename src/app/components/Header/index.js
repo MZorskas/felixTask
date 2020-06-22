@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useEffect } from 'react';
 import './index.scss';
 import Button from '../Button';
 import { Link, useHistory, useLocation } from 'react-router-dom';
@@ -6,53 +6,39 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import authentication from '../../../authentication';
 
-function Header({ logoutUser, token }) {
+function Header({ logoutUser, token, isAuthorized }) {
   const history = useHistory();
   const location = useLocation();
 
-  const logout = useCallback(() => {
-    fetch('https://academy-video-api.herokuapp.com/auth/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        token: token,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw response;
-        }
-        localStorage.removeItem('token');
-        logoutUser();
-        console.log('token removed');
-        history.replace('/');
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, [history, logoutUser, token]);
-  // console.log('header', history);
+  const handleLogout = () => {
+    logoutUser(token);
+  };
+
   return (
     <header className="App-header">
       <nav className="Navbar">
-        <Link to="/" className="Logo" href="http://localhost:3000">
+        <Link to="/" className="Logo">
           FELIX
         </Link>
         <div className="NavigationLinks">
-          {token && location.pathname != '/content' && (
+          {location.pathname != '/favorites' && (
+            <Button to="/favorites" buttonStyle="btn--primary--solid">
+              Favorites
+            </Button>
+          )}
+
+          {isAuthorized && location.pathname != '/content' && (
             <Button to="/content" buttonStyle="btn--primary--solid">
               Content
             </Button>
           )}
 
-          {!token ? (
+          {!isAuthorized ? (
             <Button to="/login" buttonStyle="btn--primary--solid">
               Sign In
             </Button>
           ) : (
-            <Button buttonStyle="btn--primary--solid" onClick={logout}>
+            <Button buttonStyle="btn--primary--solid" onClick={handleLogout}>
               Logout
             </Button>
           )}
@@ -66,7 +52,10 @@ const enhance = connect(
   (state) => {
     return {
       // movies: content.movies,
+      loading: authentication.selectors.isLogoutLoading(state),
+      error: authentication.selectors.getLogoutError(state),
       token: state.authentication.token,
+      isAuthorized: !!authentication.selectors.isAuthorized(state),
     };
   },
   (dispatch) => {

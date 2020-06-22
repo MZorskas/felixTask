@@ -15,7 +15,7 @@ export const toggleFavorite = (id, isFavorite) => {
 export const fetchMovies = () => {
   return async (dispatch) => {
     dispatch({ type: types.MOVIES_REQUEST });
-    console.log('fetchingMovies', authentication);
+    console.log('fetchingMovies', localStorage.getItem('token'));
     // console.log('Action loadMovies', data);
     // return { type: types.SAVE_MOVIES, data };
     const response = await fetch(
@@ -24,7 +24,7 @@ export const fetchMovies = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          authorization: localStorage.token,
+          authorization: localStorage.getItem('token'),
         },
       }
     );
@@ -37,6 +37,38 @@ export const fetchMovies = () => {
       });
     } else {
       dispatch({ type: types.MOVIES_SUCCESS, payload: await response.json() });
+    }
+  };
+};
+
+export const fetchSingleMovie = (movieId) => {
+  return async (dispatch) => {
+    dispatch({ type: types.SINGLE_MOVIE_REQUEST });
+    console.log('fetchingMovies', localStorage.getItem('token'));
+    // console.log('Action loadMovies', data);
+    // return { type: types.SAVE_MOVIES, data };
+    const response = await fetch(
+      `https://academy-video-api.herokuapp.com/content/items/${movieId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: localStorage.getItem('token'),
+        },
+      }
+    );
+    if (!response.ok) {
+      console.log(response);
+      dispatch({
+        type: types.SINGLE_MOVIE_FAILURE,
+        payload: await response.json(),
+        error: response,
+      });
+    } else {
+      dispatch({
+        type: types.SINGLE_MOVIE_SUCCESS,
+        payload: await response.json(),
+      });
     }
   };
 };

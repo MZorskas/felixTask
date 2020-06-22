@@ -1,62 +1,84 @@
 import * as types from './types';
-import { RSAA } from 'redux-api-middleware';
+import { RSAA, createAction } from 'redux-api-middleware';
 
-export const loginUser = (username, password) => {
-  // return { type: types.USER_LOGIN_SUCCESS, token };
-  return {
-    [RSAA]: {
-      endpoint: 'https://academy-video-api.herokuapp.com/auth/login',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-      types: [
-        types.USER_LOGIN_REQUEST,
-        types.USER_LOGIN_SUCCESS,
-        types.USER_LOGIN_FAILURE,
-      ],
+//Redux-api-middleware new way
+export const loginUser = (username, password) =>
+  createAction({
+    endpoint: 'https://academy-video-api.herokuapp.com/auth/login',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  };
-};
+    body: JSON.stringify({
+      username,
+      password,
+    }),
+    types: [
+      types.USER_LOGIN_REQUEST,
+      types.USER_LOGIN_SUCCESS,
+      types.USER_LOGIN_FAILURE,
+    ],
+  });
 
-// const login = useCallback(
-//   (e) => {
-//     e.preventDefault();
-//     fetch('https://academy-video-api.herokuapp.com/auth/login', {
+// Redux-api-middleware old way
+// export const loginUser = (username, password) => {
+//   return {
+//     [RSAA]: {
+//       endpoint: 'https://academy-video-api.herokuapp.com/auth/login',
 //       method: 'POST',
 //       headers: {
 //         'Content-Type': 'application/json',
 //       },
 //       body: JSON.stringify({
-//         username: username,
-//         password: password,
+//         username,
+//         password,
 //       }),
-//     })
-//       .then((response) => {
-//         if (!response.ok) {
-//           throw setError('Wrong credentials!');
-//         }
-//         return response.json();
-//       })
-//       .then((response) => {
-//         console.log('loginFetch', response);
-//         localStorage.setItem('token', response.token);
-//         loginUser(response.token);
-//         history.replace(
-//           location.state ? location.state.referrer.pathname : '/content'
-//         );
-//       })
-//       .catch((e) => {
-//         console.log(e);
-//       });
-//   },
-//   [username, password, history, loginUser, location.state]
-// );
+//       types: [
+//         types.USER_LOGIN_REQUEST,
+//         types.USER_LOGIN_SUCCESS,
+//         types.USER_LOGIN_FAILURE,
+//       ],
+//     },
+//   };
+// };
 
-export const logoutUser = () => {
-  return { type: types.USER_LOGOUT_SUCCESS };
-};
+export const logoutUser = (token) =>
+  createAction({
+    endpoint: 'https://academy-video-api.herokuapp.com/auth/logout',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      token,
+    }),
+    types: [
+      types.USER_LOGOUT_REQUEST,
+      types.USER_LOGOUT_SUCCESS,
+      types.USER_LOGOUT_FAILURE,
+    ],
+  });
+
+// const logout = useCallback(() => {
+//   fetch('https://academy-video-api.herokuapp.com/auth/logout', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       token: token,
+//     }),
+//   })
+//     .then((response) => {
+//       if (!response.ok) {
+//         throw response;
+//       }
+//       localStorage.removeItem('token');
+//       logoutUser();
+//       console.log('token removed');
+//       history.replace('/');
+//     })
+//     .catch((e) => {
+//       console.log(e);
+//     });
+// }, [history, logoutUser, token]);

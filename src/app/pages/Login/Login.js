@@ -34,7 +34,7 @@ function Login({ loginUser, loading, error, isAuthorized, token }) {
   useEffect(() => {
     usernameRef.current.focus();
     if (isAuthorized) {
-      localStorage.setItem('token', token);
+      // localStorage.setItem('token', token);
       console.log('location', location);
       history.replace(
         location.state ? location.state.referrer.pathname : '/content'
@@ -43,16 +43,16 @@ function Login({ loginUser, loading, error, isAuthorized, token }) {
   }, [isAuthorized, token]);
   // console.log('History', history);
   // console.log('Location', location);
-  const onKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      for (let i = 0; i < refs.length; i++) {
-        if (!refs[i].current.value) {
-          refs[i].current.focus();
-          break;
-        }
-      }
-    }
-  };
+  // const onKeyDown = (e) => {
+  //   if (e.key === 'Enter') {
+  //     for (let i = 0; i < refs.length; i++) {
+  //       if (!refs[i].current.value) {
+  //         refs[i].current.focus();
+  //         break;
+  //       }
+  //     }
+  //   }
+  // };
 
   // const login = useCallback(
   //   (e) => {
@@ -90,12 +90,12 @@ function Login({ loginUser, loading, error, isAuthorized, token }) {
 
   return (
     <div className="login">
-      <div class="loginBox">
+      <div className="loginBox">
         <form id="login-form" onSubmit={handleSubmit}>
           <h3>Username</h3>
           <input
             ref={usernameRef}
-            onKeyDown={onKeyDown}
+            // onKeyDown={onKeyDown}
             onChange={(event) => {
               setUsername(event.target.value);
             }}
@@ -106,7 +106,7 @@ function Login({ loginUser, loading, error, isAuthorized, token }) {
           <h3>Password</h3>
           <input
             ref={passwordRef}
-            onKeyDown={onKeyDown}
+            // onKeyDown={onKeyDown}
             onChange={(event) => {
               setPassword(event.target.value);
             }}
@@ -122,9 +122,7 @@ function Login({ loginUser, loading, error, isAuthorized, token }) {
             onClick={togglePasswordVisibility}
           />
         </form>
-        <Button ref={submitRef} form="login-form">
-          {loading ? 'Loading...' : 'Sign In'}
-        </Button>
+        <Button form="login-form">{loading ? 'Loading...' : 'Sign In'}</Button>
       </div>
     </div>
   );
@@ -133,7 +131,7 @@ function Login({ loginUser, loading, error, isAuthorized, token }) {
 const enhance = connect(
   (state) => {
     return {
-      loading: authentication.selectors.isLoginIn(state),
+      loading: authentication.selectors.isLoginLoading(state),
       error: authentication.selectors.getLoginError(state),
       token: state.authentication.token,
       isAuthorized: !!authentication.selectors.isAuthorized(state),
