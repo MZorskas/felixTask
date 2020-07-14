@@ -2,8 +2,10 @@ export const getFavorites = (state) => state.content.favorites;
 export const isFavoriteById = (state, id) =>
   state.content.favorites.includes(id);
 
-export const isMovieFetched = (state, movieId) =>
-  state.content.movies.data.find((movie) => movie.id === movieId);
+export const isMovieFetched = (state, movieId) => {
+  console.log('isMovieFetched state', state);
+  return state.content.movies.data.find((movie) => movie.id === movieId);
+};
 
 export const getFavoriteMovies = (state) =>
   state.content.movies.data.filter((movie) =>

@@ -24,7 +24,11 @@ function Home({ fetchMovies, token, loading, error }) {
   const history = useHistory();
 
   useEffect(() => {
-    fetchMovies();
+    if (token) {
+      fetchMovies();
+    } else {
+      fetchMovies({ free: true });
+    }
   }, [fetchMovies]);
 
   // useEffect(() => {

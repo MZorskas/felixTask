@@ -1,7 +1,8 @@
 .Movie {
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
   background-color: var(--black);
-  height: calc(100vh - 140px);
+  flex-grow: 1;
 }

@@ -32,6 +32,10 @@ function Login({ loginUser, loading, error, isAuthorized, token }) {
   };
 
   useEffect(() => {
+    alert('You can login using username: tester password: netflix');
+  }, []);
+
+  useEffect(() => {
     usernameRef.current.focus();
     if (isAuthorized) {
       // localStorage.setItem('token', token);
@@ -41,52 +45,6 @@ function Login({ loginUser, loading, error, isAuthorized, token }) {
       );
     }
   }, [isAuthorized, token]);
-  // console.log('History', history);
-  // console.log('Location', location);
-  // const onKeyDown = (e) => {
-  //   if (e.key === 'Enter') {
-  //     for (let i = 0; i < refs.length; i++) {
-  //       if (!refs[i].current.value) {
-  //         refs[i].current.focus();
-  //         break;
-  //       }
-  //     }
-  //   }
-  // };
-
-  // const login = useCallback(
-  //   (e) => {
-  //     e.preventDefault();
-  //     fetch('https://academy-video-api.herokuapp.com/auth/login', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         username: username,
-  //         password: password,
-  //       }),
-  //     })
-  //       .then((response) => {
-  //         if (!response.ok) {
-  //           throw setError('Wrong credentials!');
-  //         }
-  //         return response.json();
-  //       })
-  //       .then((response) => {
-  //         console.log('loginFetch', response);
-  //         localStorage.setItem('token', response.token);
-  //         loginUser(response.token);
-  //         history.replace(
-  //           location.state ? location.state.referrer.pathname : '/content'
-  //         );
-  //       })
-  //       .catch((e) => {
-  //         console.log(e);
-  //       });
-  //   },
-  //   [username, password, history, loginUser, location.state]
-  // );
 
   return (
     <div className="login">

@@ -1,5 +1,6 @@
 import * as types from './types';
 import authentication from '../authentication';
+import store from '../app/state';
 
 export const toggleFavorite = (id, isFavorite) => {
   console.log('toggleFavorite', id, isFavorite);
@@ -12,19 +13,23 @@ export const toggleFavorite = (id, isFavorite) => {
   return { type: types.TOGGLE_FAVORITE, id };
 };
 
-export const fetchMovies = () => {
+export const fetchMovies = ({ free } = {}) => {
   return async (dispatch) => {
     dispatch({ type: types.MOVIES_REQUEST });
     console.log('fetchingMovies', localStorage.getItem('token'));
     // console.log('Action loadMovies', data);
     // return { type: types.SAVE_MOVIES, data };
     const response = await fetch(
-      'https://academy-video-api.herokuapp.com/content/items',
+      `https://academy-video-api.herokuapp.com/content/${
+        free ? 'free-' : ''
+      }items`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          authorization: localStorage.getItem('token'),
+          authorization: authentication.selectors.isAuthorized(
+            store.getState()
+          ),
         },
       }
     );

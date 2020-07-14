@@ -6,7 +6,6 @@ import './index.scss';
 import Button from '../Button';
 import Loader from '../Loader';
 import content from '../../../content/';
-// import useFetch from '../useFetch';
 
 function MovieContainer({
   isFavorite,
@@ -20,35 +19,20 @@ function MovieContainer({
   const [modal, setModal] = useState(false);
   const toggleModal = () => {
     setModal(!modal);
-    // console.log('MODAL', modal);
   };
 
-  // const { payload, fetching } = useFetch({
-  //   endpoint: `content/items/${movieId}`,
-  //   headers: {
-  //     authorization: token,
-  //   },
-  //   shouldFetch: !movie,
-  // });
-
-  // useEffect(() => {
-  //   if (payload) {
-  //     setMovie(payload);
-  //   }
-  // }, [setMovie, loadMovie, payload]);
-
   useEffect(() => {
-    console.log('MovieContainer', movie);
+    console.log('MovieContainer movie', movie);
     if (!movie) {
       fetchSingleMovie(movieId);
       console.log('Fetching movie');
     }
   }, [movie, movieId, fetchSingleMovie]);
 
+  console.log('MovieContainer movie', movie);
   return (
     <div className="movieContainer">
       {loading && <Loader text="Loading Movie"></Loader>}
-      {error && <p>{error}</p>}
 
       {!!movie && (
         <>

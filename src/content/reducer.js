@@ -13,6 +13,7 @@ const addFavorite = (state, action) => ({
   ...state,
   favorites: [...state.favorites, action.id],
 });
+
 const removeFavorite = (state, action) => ({
   ...state,
   favorites: state.favorites.filter((id) => id !== action.id),
@@ -70,7 +71,7 @@ function content(state = DEFAULT_CONTENT_STATE, action) {
         movies: {
           loading: false,
           data: action.payload,
-          error: action.error,
+          error: action.error.statusText,
         },
       };
     }

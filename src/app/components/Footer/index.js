@@ -10,7 +10,7 @@ import mastercard from '../../images/Mastercard.png';
 import amex from '../../images/Amex.png';
 import discover from '../../images/Discover.jpg';
 
-function Footer({ placeHolder, title }) {
+function Footer() {
   return (
     <footer className="App-footer">
       <span>

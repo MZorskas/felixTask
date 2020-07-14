@@ -1,15 +1,20 @@
 import React from 'react';
-import { Route, Redirect, useLocation, useHistory } from 'react-router-dom';
+import {
+  Route,
+  Redirect,
+  useLocation,
+  useHistory,
+  useParams,
+} from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import authentication from '../../authentication';
-import content from '../../content';
 
 function PrivateRoute(props) {
   const isAuthorized = useSelector(authentication.selectors.isAuthorized);
   const location = useLocation();
-  const history = useHistory();
-  console.log('ssss', isAuthorized);
+
+  console.log('PrivateRoute', location);
   if (isAuthorized) {
     // console.log('Proceed');
     return <Route {...props} />;

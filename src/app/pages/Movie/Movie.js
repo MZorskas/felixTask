@@ -6,7 +6,7 @@ import { Route, Redirect, useLocation, useParams } from 'react-router-dom';
 
 import MovieContainer from '../../components/MovieContainer';
 
-function Movie(props) {
+function Movie() {
   const { movieId } = useParams();
 
   // console.log('MOVIE page', movieId);
