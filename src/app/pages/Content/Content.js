@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import './index.scss';
 
 //Redux
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 //Components
 import MoviesContainer from '../../components/MoviesContainer';
@@ -13,20 +12,16 @@ import Loader from '../../components/Loader';
 import content from '../../../content';
 import { useHistory } from 'react-router-dom';
 
-function Content({ fetchMovies, loading, error }) {
+function Content() {
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const loading = useSelector(content.selectors.isFetchingMovies);
+  const error = useSelector(content.selectors.getMoviesError);
 
   useEffect(() => {
-    fetchMovies();
-  }, [fetchMovies]);
-
-  // useEffect(() => {
-  //   if (error) {
-  //     console.log('error', error);
-  //     localStorage.removeItem('token');
-  //     history.replace('/');
-  //   }
-  // }, [error, history]);
+    dispatch(content.actions.fetchMovies());
+  }, [content]);
 
   return (
     <React.Fragment>
@@ -39,19 +34,4 @@ function Content({ fetchMovies, loading, error }) {
   );
 }
 
-const enhance = connect(
-  (state) => {
-    return {
-      loading: content.selectors.isFetchingMovies(state),
-      error: content.selectors.getMoviesError(state),
-      // token: state.authentication.token,
-    };
-  },
-  (dispatch) => {
-    return {
-      fetchMovies: bindActionCreators(content.actions.fetchMovies, dispatch),
-    };
-  }
-);
-
-export default enhance(Content);
+export default Content;

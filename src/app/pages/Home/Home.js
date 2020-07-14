@@ -5,10 +5,10 @@ import './index.scss';
 
 //Modules
 import content from '../../../content/';
+import authentication from '../../../authentication';
 
 //Redux
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 //Components
 import Button from '../../components/Button';
@@ -20,23 +20,21 @@ import Loader from '../../components/Loader';
 // Images
 import HeroImage from '../../images/Hero.jpg';
 
-function Home({ fetchMovies, token, loading, error }) {
+function Home() {
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const loading = useSelector(content.selectors.isFetchingMovies);
+  const error = useSelector(content.selectors.getMoviesError);
+  const token = useSelector(authentication.selectors.isAuthorized);
 
   useEffect(() => {
     if (token) {
-      fetchMovies();
+      dispatch(content.actions.fetchMovies());
     } else {
-      fetchMovies({ free: true });
+      dispatch(content.actions.fetchMovies({ free: true }));
     }
-  }, [fetchMovies]);
-
-  // useEffect(() => {
-  //   if (error) {
-  //     localStorage.removeItem('token');
-  //     history.replace('/');
-  //   }
-  // }, [error]);
+  }, [content]);
 
   return (
     <React.Fragment>
@@ -58,19 +56,4 @@ function Home({ fetchMovies, token, loading, error }) {
   );
 }
 
-const enhance = connect(
-  (state) => {
-    return {
-      loading: content.selectors.isFetchingMovies(state),
-      error: content.selectors.getMoviesError(state),
-      token: state.authentication.token,
-    };
-  },
-  (dispatch) => {
-    return {
-      fetchMovies: bindActionCreators(content.actions.fetchMovies, dispatch),
-    };
-  }
-);
-
-export default enhance(Home);
+export default Home;

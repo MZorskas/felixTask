@@ -1,33 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 import './index.scss';
 import Button from '../Button';
 import Loader from '../Loader';
 import content from '../../../content/';
+import authentication from '../../../authentication';
 
-function MovieContainer({
-  isFavorite,
-  movie,
-  toggleFavorite,
-  movieId,
-  loading,
-  error,
-  fetchSingleMovie,
-}) {
+function MovieContainer() {
+  const { movieId } = useParams();
+  const dispatch = useDispatch();
+
+  const loading = useSelector(content.selectors.isFetchingMovies);
+  const error = useSelector(content.selectors.getMoviesError);
+  const movie = useSelector((state) =>
+    content.selectors.isMovieFetched(state, movieId)
+  );
+  const isFavorite = useSelector((state) =>
+    content.selectors.isFavoriteById(state, movieId)
+  );
+
+  // const token = useSelector(state.authentication.token);
+
   const [modal, setModal] = useState(false);
   const toggleModal = () => {
     setModal(!modal);
   };
 
+  const toggleFavorite = () => {
+    dispatch(content.actions.toggleFavorite(movieId, isFavorite));
+  };
   useEffect(() => {
     console.log('MovieContainer movie', movie);
     if (!movie) {
-      fetchSingleMovie(movieId);
+      dispatch(content.actions.fetchSingleMovie(movieId));
       console.log('Fetching movie');
     }
-  }, [movie, movieId, fetchSingleMovie]);
+  }, [movie, movieId, content]);
 
   console.log('MovieContainer movie', movie);
   return (
@@ -61,7 +71,7 @@ function MovieContainer({
               </Button>
               <Button
                 buttonSize="btn--large"
-                onClick={() => toggleFavorite(movieId, isFavorite)}
+                onClick={toggleFavorite}
                 buttonStyle={isFavorite && 'btn--primary--outline'}
               >
                 {isFavorite ? 'Remove' : 'Favorite'}
@@ -74,30 +84,4 @@ function MovieContainer({
   );
 }
 
-const enhance = connect(
-  (state, { movieId }) => {
-    console.log('Movie container', state, movieId);
-    return {
-      // movies: content.movies,
-      loading: content.selectors.isFetchingMovies(state),
-      error: content.selectors.getMoviesError(state),
-      movie: content.selectors.isMovieFetched(state, movieId),
-      isFavorite: content.selectors.isFavoriteById(state, movieId),
-      token: state.authentication.token,
-    };
-  },
-  (dispatch) => {
-    return {
-      toggleFavorite: bindActionCreators(
-        content.actions.toggleFavorite,
-        dispatch
-      ),
-      fetchSingleMovie: bindActionCreators(
-        content.actions.fetchSingleMovie,
-        dispatch
-      ),
-    };
-  }
-);
-
-export default enhance(MovieContainer);
+export default MovieContainer;
