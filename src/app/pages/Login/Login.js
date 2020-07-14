@@ -1,17 +1,22 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import './index.scss';
-import { bindActionCreators } from 'redux';
-import Button from '../../components/Button';
-import { useHistory, useLocation } from 'react-router-dom';
-import { connect } from 'react-redux';
-import authentication from '../../../authentication';
 
-function Login({ loginUser, loading, error, isAuthorized, token }) {
+import { useHistory, useLocation } from 'react-router-dom';
+
+// Context
+import { UserContext } from '../../context/UserContext';
+
+// Components
+import Button from '../../components/Button';
+
+function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  // const [error, setError] = useState('');
+
   const [showPassword, setShowPassword] = useState(false);
   const inputRef = useRef();
+
+  const { login, token, error, loading } = useContext(UserContext);
 
   const history = useHistory();
   const location = useLocation();
@@ -24,11 +29,11 @@ function Login({ loginUser, loading, error, isAuthorized, token }) {
   const passwordRef = useRef(null);
   const submitRef = useRef(null);
 
-  const refs = [usernameRef, passwordRef];
+  // const refs = [usernameRef, passwordRef];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    loginUser(username, password);
+    login(username, password);
   };
 
   useEffect(() => {
@@ -37,14 +42,12 @@ function Login({ loginUser, loading, error, isAuthorized, token }) {
 
   useEffect(() => {
     usernameRef.current.focus();
-    if (isAuthorized) {
-      // localStorage.setItem('token', token);
-      console.log('location', location);
+    if (token) {
       history.replace(
         location.state ? location.state.referrer.pathname : '/content'
       );
     }
-  }, [isAuthorized, token]);
+  }, [token]);
 
   return (
     <div className="login">
@@ -86,20 +89,4 @@ function Login({ loginUser, loading, error, isAuthorized, token }) {
   );
 }
 
-const enhance = connect(
-  (state) => {
-    return {
-      loading: authentication.selectors.isLoginLoading(state),
-      error: authentication.selectors.getLoginError(state),
-      token: state.authentication.token,
-      isAuthorized: !!authentication.selectors.isAuthorized(state),
-    };
-  },
-  (dispatch) => {
-    return {
-      loginUser: bindActionCreators(authentication.actions.loginUser, dispatch),
-    };
-  }
-);
-
-export default enhance(Login);
+export default Login;

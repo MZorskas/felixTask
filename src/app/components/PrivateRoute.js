@@ -1,21 +1,14 @@
-import React from 'react';
-import {
-  Route,
-  Redirect,
-  useLocation,
-  useHistory,
-  useParams,
-} from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+import { Route, Redirect, useLocation } from 'react-router-dom';
 
-import authentication from '../../authentication';
+// Context
+import { UserContext } from '../context/UserContext';
 
 function PrivateRoute(props) {
-  const isAuthorized = useSelector(authentication.selectors.isAuthorized);
   const location = useLocation();
+  const { token } = useContext(UserContext);
 
-  console.log('PrivateRoute', location);
-  if (isAuthorized) {
+  if (token) {
     // console.log('Proceed');
     return <Route {...props} />;
   }

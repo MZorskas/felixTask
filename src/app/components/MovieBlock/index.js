@@ -1,20 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './index.scss';
-import Button from '../Button';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import content from '../../../content/';
-import { bindActionCreators } from 'redux';
 
-function MovieBlock({
-  children,
-  title,
-  placeHolder,
-  movieId,
-  isFavorite,
-  toggleFavorite,
-}) {
-  const onClick = () => toggleFavorite(movieId, isFavorite);
+// Context
+import { ContentContext } from '../../context/ContentContext';
+
+// Components
+import Button from '../Button';
+
+function MovieBlock({ children, title, placeHolder, movieId }) {
+  const { favorites, toggleFavorite } = useContext(ContentContext);
+  const isFavorite = favorites.includes(movieId);
+  const Favorite = () => toggleFavorite(movieId, isFavorite);
 
   return (
     <div className="movieBlock">
@@ -31,7 +28,7 @@ function MovieBlock({
 
         <Button
           buttonSize="btn--medium"
-          onClick={onClick}
+          onClick={Favorite}
           buttonStyle={isFavorite && 'btn--primary--outline'}
         >
           {isFavorite ? 'Remove' : 'Favorite'}
@@ -41,20 +38,4 @@ function MovieBlock({
   );
 }
 
-const enhance = connect(
-  (state, { movieId }) => {
-    return {
-      isFavorite: content.selectors.isFavoriteById(state, movieId),
-    };
-  },
-  (dispatch) => {
-    return {
-      toggleFavorite: bindActionCreators(
-        content.actions.toggleFavorite,
-        dispatch
-      ),
-    };
-  }
-);
-
-export default enhance(MovieBlock);
+export default MovieBlock;

@@ -1,19 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useContext } from 'react';
 import './index.scss';
-import Button from '../Button';
-import { Link, useHistory, useLocation } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import authentication from '../../../authentication';
+import { Link, useLocation } from 'react-router-dom';
 
-function Header({ logoutUser, token, isAuthorized }) {
-  const history = useHistory();
+// Context
+import { UserContext } from '../../context/UserContext';
+
+// Components
+import Button from '../Button';
+function Header() {
   const location = useLocation();
 
+  const { logout, token } = useContext(UserContext);
+
   const handleLogout = () => {
-    logoutUser(token);
+    logout(token);
   };
 
+  console.log('Header', { logout, token });
   return (
     <header className="App-header">
       <nav className="Navbar">
@@ -27,13 +30,13 @@ function Header({ logoutUser, token, isAuthorized }) {
             </Button>
           )}
 
-          {isAuthorized && location.pathname != '/content' && (
+          {token && location.pathname != '/content' && (
             <Button to="/content" buttonStyle="btn--primary--solid">
               Content
             </Button>
           )}
 
-          {!isAuthorized ? (
+          {!token ? (
             <Button to="/login" buttonStyle="btn--primary--solid">
               Sign In
             </Button>
@@ -48,24 +51,4 @@ function Header({ logoutUser, token, isAuthorized }) {
   );
 }
 
-const enhance = connect(
-  (state) => {
-    return {
-      // movies: content.movies,
-      loading: authentication.selectors.isLogoutLoading(state),
-      error: authentication.selectors.getLogoutError(state),
-      token: state.authentication.token,
-      isAuthorized: !!authentication.selectors.isAuthorized(state),
-    };
-  },
-  (dispatch) => {
-    return {
-      logoutUser: bindActionCreators(
-        authentication.actions.logoutUser,
-        dispatch
-      ),
-    };
-  }
-);
-
-export default enhance(Header);
+export default Header;

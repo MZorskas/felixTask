@@ -1,24 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useContext } from 'react';
 import './index.scss';
 
-//Redux
-import { connect, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
+//Context
+import { ContentContext } from '../../context/ContentContext';
 
 //Components
 import MoviesContainer from '../../components/MoviesContainer';
 import Button from '../../components/Button';
-import Loader from '../../components/Loader';
-
-//Modules
-import content from '../../../content';
-import { useHistory } from 'react-router-dom';
 
 function Favorites() {
-  const favorites = useSelector(content.selectors.getFavorites);
-  const loading = useSelector(content.selectors.isFetchingMovies);
-  const error = useSelector(content.selectors.getMoviesError);
-  const getFavoriteMovies = useSelector(content.selectors.getFavoriteMovies);
+  const { favorites } = useContext(ContentContext);
 
   return (
     <React.Fragment>
@@ -30,7 +21,7 @@ function Favorites() {
           </Button>
         </div>
       ) : (
-        <MoviesContainer favorites={getFavoriteMovies} />
+        <MoviesContainer />
       )}
     </React.Fragment>
   );

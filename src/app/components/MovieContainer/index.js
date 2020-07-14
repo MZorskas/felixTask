@@ -1,43 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import Modal from 'react-modal';
 import './index.scss';
+
+// Context
+import { ContentContext } from '../../context/ContentContext';
+
+// Components
+import Modal from 'react-modal';
 import Button from '../Button';
 import Loader from '../Loader';
-import content from '../../../content/';
-import authentication from '../../../authentication';
 
 function MovieContainer() {
   const { movieId } = useParams();
-  const dispatch = useDispatch();
 
-  const loading = useSelector(content.selectors.isFetchingMovies);
-  const error = useSelector(content.selectors.getMoviesError);
-  const movie = useSelector((state) =>
-    content.selectors.isMovieFetched(state, movieId)
-  );
-  const isFavorite = useSelector((state) =>
-    content.selectors.isFavoriteById(state, movieId)
-  );
+  const {
+    data,
+    favorites,
+    toggleFavorite,
+    fetchSingleMovie,
+    loading,
+  } = useContext(ContentContext);
 
-  // const token = useSelector(state.authentication.token);
+  const isFavorite = favorites.includes(movieId);
+  const movie = data.find((movie) => movie.id === movieId);
 
   const [modal, setModal] = useState(false);
+
   const toggleModal = () => {
     setModal(!modal);
   };
 
-  const toggleFavorite = () => {
-    dispatch(content.actions.toggleFavorite(movieId, isFavorite));
+  const Favorite = () => {
+    toggleFavorite(movieId, isFavorite);
   };
+
   useEffect(() => {
-    console.log('MovieContainer movie', movie);
     if (!movie) {
-      dispatch(content.actions.fetchSingleMovie(movieId));
-      console.log('Fetching movie');
+      fetchSingleMovie(movieId);
     }
-  }, [movie, movieId, content]);
+  }, [movie, movieId]);
 
   console.log('MovieContainer movie', movie);
   return (
@@ -71,7 +72,7 @@ function MovieContainer() {
               </Button>
               <Button
                 buttonSize="btn--large"
-                onClick={toggleFavorite}
+                onClick={Favorite}
                 buttonStyle={isFavorite && 'btn--primary--outline'}
               >
                 {isFavorite ? 'Remove' : 'Favorite'}

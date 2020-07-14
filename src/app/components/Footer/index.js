@@ -4,7 +4,6 @@ import './index.scss';
 import CreditCard from '../CreditCard';
 
 // Images
-
 import visa from '../../images/Visa.svg';
 import mastercard from '../../images/Mastercard.png';
 import amex from '../../images/Amex.png';

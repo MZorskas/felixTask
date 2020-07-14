@@ -1,16 +1,11 @@
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-
+import React, { useEffect, useContext } from 'react';
 import './index.scss';
 
-//Modules
-import content from '../../../content/';
-import authentication from '../../../authentication';
+// Context
+import { ContentContext } from '../../context/ContentContext';
+import { UserContext } from '../../context/UserContext';
 
-//Redux
-import { useSelector, useDispatch } from 'react-redux';
-
-//Components
+// Components
 import Button from '../../components/Button';
 import Separator from '../../components/Separator';
 import Banner from '../../components/Banner';
@@ -21,20 +16,16 @@ import Loader from '../../components/Loader';
 import HeroImage from '../../images/Hero.jpg';
 
 function Home() {
-  const history = useHistory();
-  const dispatch = useDispatch();
-
-  const loading = useSelector(content.selectors.isFetchingMovies);
-  const error = useSelector(content.selectors.getMoviesError);
-  const token = useSelector(authentication.selectors.isAuthorized);
+  const { fetchMovies, loading, error } = useContext(ContentContext);
+  const { token } = useContext(UserContext);
 
   useEffect(() => {
     if (token) {
-      dispatch(content.actions.fetchMovies());
+      fetchMovies();
     } else {
-      dispatch(content.actions.fetchMovies({ free: true }));
+      fetchMovies({ free: true });
     }
-  }, [content]);
+  }, [token]);
 
   return (
     <React.Fragment>

@@ -1,11 +1,7 @@
 import React from 'react';
 import './index.scss';
 
-const STYLES = ['btn--primary-solid', 'btn--primary--outline'];
-
-const SIZES = ['btn--medium', 'btn--small', 'btn--large'];
-
-function ImageBlock({ placeHolder, position }) {
+function ImageBlock({ placeHolder }) {
   return (
     <div className="Image">
       <image src={placeHolder} />
