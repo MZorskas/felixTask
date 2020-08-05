@@ -1,12 +1,11 @@
 import React, { useEffect, useContext } from 'react';
-import './index.scss';
 
 //Redux
-import { ContentContext } from '../../context/ContentContext';
+import { ContentContext } from '../context/ContentContext';
 
 //Components
-import MoviesContainer from '../../components/MoviesContainer';
-import Loader from '../../components/Loader';
+import MoviesContainer from '../components/MoviesContainer';
+import Loader from '../components/Loader';
 
 function Content() {
   const { fetchMovies, loading, error } = useContext(ContentContext);

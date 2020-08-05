@@ -1,14 +1,6 @@
 import React from 'react';
-import './index.scss';
+import useStyles from './styles.jsx';
 import { Link } from 'react-router-dom';
-
-const STYLES = [
-  'btn--primary-solid',
-  'btn--primary--outline',
-  'btn--banner-solid',
-];
-
-const SIZES = ['btn--medium', 'btn--small', 'btn--large'];
 
 function Button({
   children,
@@ -18,17 +10,35 @@ function Button({
   buttonSize,
   form,
   to,
+  navigationLink,
 }) {
-  const Tag = to ? Link : 'button';
-  const checkButtonStyle = STYLES.includes(buttonStyle)
-    ? buttonStyle
-    : STYLES[0];
+  const classes = useStyles();
 
-  const checkButtonSize = SIZES.includes(buttonSize) ? buttonSize : SIZES[0];
+  const checkButtonSize = () => {
+    if (buttonSize === 'small') {
+      return classes.BtnSmall;
+    } else if (buttonSize === 'large') {
+      return classes.BtnLarge;
+    } else {
+      return classes.BtnMedium;
+    }
+  };
+
+  const checkButtonStyle = () => {
+    if (buttonStyle === 'outline') {
+      return classes.BtnOutline;
+    } else {
+      return classes.BtnSolid;
+    }
+  };
+
+  const Tag = to ? Link : 'button';
 
   return (
     <Tag
-      className={`btn ${checkButtonStyle} ${checkButtonSize}`}
+      className={`${classes.Btn} ${checkButtonSize()} ${checkButtonStyle()} ${
+        navigationLink && classes.NavigationLinkBtn
+      }`}
       onClick={onClick}
       type={type}
       to={to}

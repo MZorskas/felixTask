@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import './index.scss';
+import { Container } from '@material-ui/core';
+import useStyles from './styles.jsx';
+import Typography from '@material-ui/core/Typography';
 
 // Context
 import { ContentContext } from '../../context/ContentContext';
@@ -11,8 +13,9 @@ import Button from '../Button';
 import Loader from '../Loader';
 
 function MovieContainer() {
+  // console.log('movieContainer', Container);
   const { movieId } = useParams();
-
+  const classes = useStyles();
   const {
     data,
     favorites,
@@ -42,7 +45,7 @@ function MovieContainer() {
 
   console.log('MovieContainer movie', movie);
   return (
-    <div className="movieContainer">
+    <Container maxWidth="md" className={classes.MovieContainer}>
       {loading && <Loader text="Loading Movie"></Loader>}
 
       {!!movie && (
@@ -50,8 +53,8 @@ function MovieContainer() {
           <Modal
             isOpen={modal}
             onRequestClose={toggleModal}
-            className="Modal"
-            overlayClassName="Overlay"
+            className={classes.Modal}
+            overlayClassName={classes.Overlay}
           >
             <iframe
               title={`${movie.title} trailer`}
@@ -60,20 +63,23 @@ function MovieContainer() {
               allowfullscreen="true"
             />
           </Modal>
-          <div className="img-container">
+          <div className={classes.ImgContainer}>
             <img className="" src={movie.image} alt="Movie" loading="lazy" />
           </div>
-          <div className="movie-info">
-            <h1>{movie.title}</h1>
+          <div className={classes.MovieInfo}>
+            <Typography variant="h4" component="h4" fontWeight={700}>
+              {movie.title}
+            </Typography>
+            {/* <h1>{movie.title}</h1> */}
             <p>{movie.description}</p>
-            <div className="buttons">
-              <Button buttonSize="btn--large" onClick={() => toggleModal()}>
+            <div className={classes.Buttons}>
+              <Button buttonSize="large" onClick={() => toggleModal()}>
                 Watch
               </Button>
               <Button
-                buttonSize="btn--large"
+                buttonSize="large"
                 onClick={Favorite}
-                buttonStyle={isFavorite && 'btn--primary--outline'}
+                buttonStyle={isFavorite && 'outline'}
               >
                 {isFavorite ? 'Remove' : 'Favorite'}
               </Button>
@@ -81,7 +87,7 @@ function MovieContainer() {
           </div>
         </>
       )}
-    </div>
+    </Container>
   );
 }
 
